@@ -1,18 +1,24 @@
-import React from 'react'
-import { DocsThemeConfig } from 'nextra-theme-docs'
+import React from "react";
+import { DocsThemeConfig } from "nextra-theme-docs";
+import Logo from "./components/logo";
 
 const config: DocsThemeConfig = {
-  logo: <span>My Project</span>,
-  project: {
-    link: 'https://github.com/shuding/nextra-docs-template',
+  logo: <Logo />,
+  docsRepositoryBase: "https://github.com/BRACKETS-by-TRIAD/craftable-pro-docs",
+  primaryHue: {
+    light: 240,
+    dark: 220,
   },
-  chat: {
-    link: 'https://discord.com',
-  },
-  docsRepositoryBase: 'https://github.com/shuding/nextra-docs-template',
   footer: {
-    text: 'Nextra Docs Template',
+    text: (
+      <span>
+        <a href="https://meetbrackets.com/" target="_blank">
+          BRACKETS by Triad s.r.o
+        </a>{" "}
+        © {new Date().getFullYear()}
+      </span>
+    ),
   },
-}
+};
 
-export default config
+export default config;
