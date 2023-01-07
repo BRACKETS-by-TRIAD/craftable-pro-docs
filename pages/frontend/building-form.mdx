@@ -44,27 +44,27 @@ Examine the example bellow to see how to use them:
     </Card>
 </template>
 <script setup lang="ts">
-    import { ArrowDownTrayIcon } from "@heroicons/vue/24/outline";
-    import {
-        Button,
-        Card,
-        CardContent,
-        CardFooter,
-        TextInput,
-        Multiselect,
-    } from "craftable-pro/Components";
-    import { useForm } from "craftable-pro/helpers";
+import { ArrowDownTrayIcon } from "@heroicons/vue/24/outline";
+import {
+    Button,
+    Card,
+    CardContent,
+    CardFooter,
+    TextInput,
+    Multiselect,
+} from "craftable-pro/Components";
+import { useForm } from "craftable-pro/helpers";
 
-    interface Props {
-        locales?: string[];
-    }
+interface Props {
+    locales?: string[];
+}
 
-    const props = withDefaults(defineProps<Props>(), {
-        locales: () => ["en"],
-    });
+const props = withDefaults(defineProps<Props>(), {
+    locales: () => ["en"],
+});
 
-    // This is detaily explained in the next section
-    const { form, submit } = useForm(...);
+// This is detaily explained in the next section
+const { form, submit } = useForm(...);
 </script>
 ```
 
@@ -74,7 +74,7 @@ Craftable PRO is built with [InertiaJS](https://inertiajs.com/). We use their `u
 However we extended it to make it more flexible and to add some extra functionality.
 
 To use it, import it using following import:
-```js
+```js copy
 import { useForm } from "craftable-pro/helpers";
 ```
 

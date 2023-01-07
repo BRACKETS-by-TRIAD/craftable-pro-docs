@@ -6,7 +6,7 @@ When creating new page components, place them inside `resources/js/craftable-pro
 
 Every page component has to be a Vue component. You can use following template as a starting point to provide consistent page layout and styling. Of course you can still create page from scratch if you need to.
 
-```html
+```vue copy
 <template>
     <PageHeader :title="$t('craftable-pro', 'New page title')">
         <!-- PageHeader default slot used to place buttons or any other markup inside the PageHeader -->
@@ -17,10 +17,13 @@ Every page component has to be a Vue component. You can use following template a
 
         <template #aside>
             <!--
-                PageContent slot used to place content outside of the container,
-                usefull for using dedicated `Aside` component
+                Optional PageContent slot used to place content outside of the container.
+                Usefull for using dedicated `Aside` component
             -->
         </template>
     </PageContent>
 </template>
+<script setup>
+import { PageHeader, PageContent } from 'craftable-pro/Components'
+</script>
 ```
