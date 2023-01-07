@@ -1,8 +1,8 @@
 {
-  "config_files": "Config files",
+  "config-files": "Config files",
   "components": "Components",
   "customization": "Customization",
   "translations": "Translations",
-  "building_page": "Building page",
-  "building_form": "Building form"
+  "building-page": "Building page",
+  "building-form": "Building form"
 }
