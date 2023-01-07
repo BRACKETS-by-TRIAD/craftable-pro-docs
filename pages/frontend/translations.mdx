@@ -1,0 +1,69 @@
+import { Callout } from 'nextra-theme-docs'
+
+# Translations
+
+Craftable PRO uses custom Vue plugin for frontend translations build on top of [laravel-vue-i18n](https://github.com/xiCO2k/laravel-vue-i18n).
+Translations are stored in the database and can be edited by the user.
+
+## Available functions
+
+`$t` and `$tChoice` are automatically available in all Vue components inside `<template>` tag. See the example bellow:
+
+```vue filename="resources/js/craftable-pro/Components/Sidebar.vue"
+<template>
+    <Button>
+        {{ $t("crafable-pro", "Click me!") }}
+    </Button>
+</template>
+
+<script setup lang="ts">
+    import {Button} from "craftable-pro/components";
+</script>
+```
+
+Other functions have to be imported from our plugin:
+```js
+import {trans, transChoice, wTrans, wTransChoice} from "craftable-pro/plugins/laravel-vue-i18n";
+```
+
+## Overloaded versions with group parameter
+
+In addition of all the translation functions described in the [laravel-vue-i18n docs](https://github.com/xiCO2k/laravel-vue-i18n), you can use their overloaded versions with optional first parameter `group` which will be used to group translations in the database.
+
+This behaviour uses same import and aplies for all functions (`$t`/`$tChoice`/`trans`/`transChoice`/`wTrans`/`wTransChoice`).
+You can check the usage bellow:
+
+```js
+$t("frontend", "Welcome :name", { name: "John" });
+$tChoice("frontend", "{1} :count minute ago|[2,*] :count minutes ago", 10);
+```
+
+The code example above would results to following DB records:
+
+```
+| group      | key                                              |
+|------------|--------------------------------------------------|
+| "frontend" | "Welcome :name"                                  |
+| "frontend" | "{1} :count minute ago|[2,*] :count minutes ago" |
+```
+
+When using translations function without `group` parameter, the default group `*` will be used:
+
+```js
+$t("Welcome :name", { name: "John" });
+$tChoice("{1} :count minute ago|[2,*] :count minutes ago", 10);
+```
+
+The code example above would results to following DB records:
+
+```
+| group | key                                              |
+|-------|--------------------------------------------------|
+| "*"   | "Welcome :name"                                  |
+| "*"   | "{1} :count minute ago|[2,_] :count minutes ago" |
+```
+
+<Callout>
+  This functionality is only available when importing functions from our plugin `craftable-pro/plugins/laravel-vue-i18n`. Using import directly from `laravel-vue-i18n` will not work.
+</Callout>
+

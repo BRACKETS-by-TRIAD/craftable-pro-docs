@@ -1,0 +1,49 @@
+import { Callout, Tab, Tabs } from "nextra-theme-docs";
+
+# Installation
+
+<div className="steps-container">
+
+### Register private repository
+
+After obtaining a valid Craftable PRO license you need to add our private repository to your project:
+
+```bash
+composer config repositories.craftable-pro vcs git@github.com:BRACKETS-by-TRIAD/craftable-pro.git
+```
+
+### Require the package in your project
+
+```bash
+composer require brackets/craftable-pro
+```
+
+### Run the installation command
+
+This command will publish resources, migrations, configs, edit some configuration files and more.
+
+```bash
+php artisan craftable-pro:install
+```
+
+### Build frontend assets
+
+You can use whatever package manager you preffer, but we will use `npm` in this example.
+
+```bash
+npm install
+```
+
+Afterwards you can start Vite with:
+
+```bash
+npm run craftable-pro:dev
+```
+
+Or you can build the assets for production with:
+
+```bash
+npm run craftable-pro:build
+```
+
+</div>
