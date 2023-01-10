@@ -1,0 +1,18 @@
+import { Callout, Tab, Tabs } from "nextra-theme-docs";
+
+# Installation command
+
+```bash copy
+php artisan craftable-pro:install
+```
+<div>
+    This command install Craftable PRO package. Publish resources, migrations, config, creating admin user,
+    edit some configuration files, generating translations.
+</div>
+
+#### Command options:
+<p>`--overwrite` - Replace all files</p>
+<p>`--no-user` - Skip generating admin user</p>
+<p>`--no-migrate` - Skip generating migrations </p>
+<p>`--no-interaction` - Don't ask anyone questions</p>
+<p>`--without-logger` - Skip install advanced logger package</p>

@@ -20,7 +20,8 @@ composer require brackets/craftable-pro
 
 ### Run installation command
 
-This command will publish resources, migrations, configs, edit some configuration files and more.
+This command will publish resources, migrations, configs, edit some configuration files and more. <br/>
+Check on [Install command](/commands/installation-command) from more informations.
 
 ```bash copy
 php artisan craftable-pro:install
@@ -45,5 +46,31 @@ Or you can build the assets for production with:
 ```bash copy
 npm run craftable-pro:build
 ```
+
+### If you using InertiaJs on frontend need to do:
+
+Extract all routes definition `craftable-pro` into a separate file `routes/craftable-pro.php`
+
+Add into Kernel.php this lines:
+
+```bash copy
+'craftable-pro' => [
+    \App\Http\Middleware\EncryptCookies::class,
+    \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+    \Illuminate\Session\Middleware\StartSession::class,
+    \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+    \App\Http\Middleware\VerifyCsrfToken::class,
+    \Illuminate\Routing\Middleware\SubstituteBindings::class,
+]
+```
+
+Add into RouteServiceProvider.php this lines:
+
+```bash copy
+Route::middleware('craftable-pro')
+    ->group(base_path('routes/craftable-pro.php'));
+```
+
+
 
 </div>
