@@ -1,0 +1,37 @@
+
+# Using InertiaJs on frontend
+
+If you would like to use an InertiaJS on your FE we recommend you to separate the Craftable PRO routes
+with it's own InertiaJS middleware.
+
+### If you using InertiaJs on frontend need to do:
+
+<div className="steps-container">
+    ### Extract routes
+    Extract all routes definition `craftable-pro` into a separate file `routes/craftable-pro.php`
+
+    Example:
+    `Route::craftablePro('admin');`
+
+    ### Update Kernel.php
+    Create a new route middleware group, with the same middlewares as you have in the web group:
+
+    ```bash copy
+    'craftable-pro' => [
+        \App\Http\Middleware\EncryptCookies::class,
+        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+        \Illuminate\Session\Middleware\StartSession::class,
+        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+        \App\Http\Middleware\VerifyCsrfToken::class,
+        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+    ]
+    ```
+
+    ### Update RouteServiceProvider.php
+    Register this new middleware group in your RouteServiceProvider
+
+    ```bash copy
+    Route::middleware('craftable-pro')
+        ->group(base_path('routes/craftable-pro.php'));
+    ```
+</div>
