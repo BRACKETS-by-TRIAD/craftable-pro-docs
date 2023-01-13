@@ -1,0 +1,177 @@
+import Image from "next/image";
+
+# Media
+
+Often you want to be able to assign some media to your Eloquent models.
+
+Craftable provides you an option to do that. It uses Spatie's `spatie/laravel-medialibrary`, but it goes a bit further:
+- UI - provides the uploader, media viewer elements and media manager
+- Collections definition - inspired by the conversions definition
+- Auto-Process - saving the eloquent model automatically processes and attaches media collections from the request
+- Authorization - controls, who has the permission to attach specific medium to specific model
+- Private access - controls, who has the permission to view specific medium
+
+## Basic Usage
+
+There are two core concepts to understand - `MediaCollections` and `MediaConversions`.
+
+If you have different types of files that you want to associate with your model (e.g. image gallery, list of PDFs), you can put them in their own `MediaCollection`.
+
+When adding files to your media library, `MediaConversions` can automatically create derived versions such as thumbnails, optimized versions, etc.. You can register as many `MediaConversions` as you want.
+
+### Collection definition
+
+First, we need to define the media collections for the specific model.
+
+Let's imagine a `Post` model for following examples. You need to register media collection like this:
+```php
+use Illuminate\Database\Eloquent\Model;
+use Brackets\Media\HasMedia\ProcessMediaTrait;
+use Brackets\Media\HasMedia\AutoProcessMediaTrait;
+use Brackets\Media\HasMedia\HasMediaCollectionsTrait;
+use Spatie\MediaLibrary\HasMedia;
+
+class Post extends Model implements HasMedia {
+
+    use ProcessMediaTrait;
+    use AutoProcessMediaTrait;
+    use HasMediaCollectionsTrait;
+
+    public function registerMediaCollections(): void {
+        $this->addMediaCollection('gallery');
+    }
+```
+
+Here we have added new `gallery` media collection.
+
+### Saving media
+
+If we use `AutoProcessMediaTrait` media are attached automatically from the request (on `saving` event hook). You just need to use our uploader element or attach a `gallery` data structure to your request data like this:
+
+```php
+class PostsController extends Controller {
+    ...
+    public function store(StoreRequest $request)
+    {
+        // this will automatically attach $request->file('gallery') to the Post
+        $post = Post::create($request->validated());
+        ...
+    }
+```
+
+The `$request->gallery` should be an array in following format:
+```php
+[
+    [
+        'id' => null,
+        'collection_name' => 'gallery',
+        'path' => 'my_lovely_picture_1.jpg',
+        'action' => 'add',
+        'meta_data' => [ // or any other data
+            'name' => 'test',
+            'width' => 200,
+            'height' => 200,
+        ],
+    ],
+    [
+        'id' => null,
+        'collection_name' => 'gallery',
+        'path' => 'my_lovely_picture_2.jpg',
+        'action' => 'add',
+        'meta_data' => [ // or any other data
+            'name' => 'test',
+            'width' => 200,
+            'height' => 200,
+        ],
+    ],
+    ...
+];
+```
+
+If Auto Process is not convenient it can be turned off simply by not using `AutoProcessMediaTrait`.
+
+Once turned-off you can still process media manually using `processMedia()` method on your model or you can use Spatie's way of attaching media (see https://docs.spatie.be/laravel-medialibrary/v9/basic-usage/associating-files).
+
+### Media Conversions
+
+If you want to adjust media during handling (e.g. resize, crop, optimize, fine tune colors) you can do it by using Spatie's method `registerMediaConversions` as shown below.
+
+```php
+use Illuminate\Database\Eloquent\Model;
+use Brackets\Media\HasMedia\ProcessMediaTrait;
+use Brackets\Media\HasMedia\AutoProcessMediaTrait;
+use Brackets\Media\HasMedia\HasMediaCollectionsTrait;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\MediaLibrary\HasMedia;
+
+class Post extends Model implements HasMedia {
+
+    use ProcessMediaTrait;
+    use AutoProcessMediaTrait;
+    use HasMediaCollectionsTrait;
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('gallery');
+    }
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('detail_hd')
+            ->width(1920)
+            ->height(1080)
+            ->performOnCollections('gallery');
+    }
+```
+
+It uses Spatie's fluent API, so for more info, check out their docs at https://docs.spatie.be/laravel-medialibrary/v9/converting-images/defining-conversions.
+
+### Media manager
+
+Craftable PRO includes media manager for management of images throughout all the models.
+
+<br/>
+<Image alt={'Roles'} width={550} height={550} src="/images/mediaManager.png" />
+
+In addition, you can upload photo directly through media manager. This file will be than unassigned (will be assigned to `UnassignedMedia` model).
+
+Media manager provides simple filtering, possibility to download or to delete media.
+
+<br/>
+<Image alt={'Roles'} width={300} height={300} src="/images/mediaManagerActions.png" />
+
+### UI elements
+
+TODO
+
+### Retrieve
+
+To retrieve files you can use the `getMedia` method:
+
+```php
+$mediaItems = $post->getMedia('nameOfTheCollection');
+$publicUrl = $mediaItems[0]->getUrl();
+
+// to retrieve media from any Media Conversion
+$publicUrl = $mediaItems[0]->getUrl('nameOfTheConversion');
+```
+
+For more info check the Spatie's docs: https://docs.spatie.be/laravel-medialibrary/v9/basic-usage/retrieving-media
+
+## Advanced usage
+
+There are following methods on `Media Collections`:
+
+```php
+public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('gallery')
+            ->disk('media') // Specify a disk where to store this collection
+            ->private() // Alias to setting default private disk
+            ->maxNumberOfFiles(10) // Set the file count limit
+            ->maxFilesize(2*1024*1024) // Set the file size limit
+            ->accepts('image/*') // Set the accepted file types (in MIME type format)
+            ->canView('media.view') // Set the ability (Gate) which is required to view the medium (in most cases you would want to call private())
+            ->canUpload('media.upload') // Set the ability (Gate) which is required to upload & attach new files to the model
+    }
+```
