@@ -1,0 +1,16 @@
+name: Deploy to docs.craftable.pro
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  forge-deploy:
+    name: 'Deploy'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy
+        uses: jbrooksuk/laravel-forge-action@v1.0.4
+        with:
+          trigger_url: ${{ secrets.FORGE_DEPLOY_URL }}
