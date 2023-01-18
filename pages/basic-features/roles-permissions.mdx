@@ -7,13 +7,9 @@ Thanks to Craftable PRO you have been given all you need for setting roles and p
 
 ## Roles
 
-By default, Craftable PRO comes with tho main roles: Administrator and Guest. You are able to define as many roles as you need.
+By default, Craftable PRO comes with tho main roles: Administrator and Guest. You are able to define as many roles as you need, all you need to do is create the migration that will add a new role.
 <br/>
 <Image alt={'Roles'} width={550} height={550} src="/images/roles.png" />
-
-<Callout type="info">
-    Creating own role is still in development and will be introduced soon.
-</Callout>
 
 ### Default role after registration
 
@@ -53,5 +49,9 @@ For a better UI experience you may want to have manageable permissions translati
 ```bash copy
 php artisan craftable-pro:generate-permission-translations
 ```
+
+<Callout type="info">
+    If you are using pipelines for deployment, the recommended way is to run this command automatically within them. It can be called at any point after running the migrations.
+</Callout>
 
 Now you have all your permission strings available in the Translations manager (see [Translations](/basic-features/translations)).

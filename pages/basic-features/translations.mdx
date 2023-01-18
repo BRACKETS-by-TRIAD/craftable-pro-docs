@@ -56,11 +56,15 @@ You can run re-scan also by calling the artisan command:
 php artisan craftable-pro:scan-translations
 ```
 
+<Callout type="info">
+    If you are using pipelines for deployment, the recommended way is to run this command automatically within them. It can be called at any point after pulling the changes.
+</Callout>
+
 All translations are then available on the Translations page, where you can edit them.
 
 ### External Scanners
 
-In addition to PHP and JS scanners Craftable PRO can deal also with JSON files. We call those external, as they can be unrelated directly to our app.
+In addition to PHP and JS scanners Craftable PRO can deal also with JSON files. We call those external, as they can be unrelated directly to your app.
 
 Under the translations in config you can specify external scanners. You just have to specify the path to the scanned folder. Scanning process is the same as with external scanners.
 
@@ -102,13 +106,13 @@ You can specify in the Craftable PRO config which groups should be published and
 ]
 ```
 
-After that, you have to publish translations by clicking on the "Publish Translations" button on the Translations page or by calling the artisan command:
+After that, you have to publish translations by clicking the "Publish Translations" button on the Translations page or by calling the artisan command:
 
 ```bash copy
 php artisan craftable-pro:publish-translations
 ```
 
-Your translated strings will be then saved in the `public/lang` folder. Files will be named after the translation group. Given languages de, en and sk, the result would be:
+Your translated strings will be then saved in the `public/lang` folder. Files will be named after the translation group. Given locales de, en and sk, the result would be:
 
 ```
 public/lang
@@ -119,6 +123,13 @@ public/lang
 └── sk
      └── craftable-pro.json
 ```
+
+## Adding new languages
+
+You are able to create a new language on the Settings page (see [Settings](/basic-features/settings)). All you need to do is to add a new locale to multiselect and hit enter.
+<br />
+<Image alt={'Import translations'} width={300} height={300} src="/images/newLang.png" />
+
 
 ## Export
 

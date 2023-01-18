@@ -2,8 +2,7 @@ import { Callout } from 'nextra-theme-docs';
 import Image from "next/image";
 
 # Users
-
-Craftable PRO comes with several handy features for user management.
+Craftable PRO comes with CRUD for users where you can manage who has the access to the Craftable PRO interface. Optionally, you can manage also other types of users for example in your frontend or mobile app (and assign them a different roles like Visitor or Member). Craftable PRO additionally introduces several handy features.
 
 ## Self-registration
 
@@ -37,7 +36,7 @@ There is a dedicated column `email_verified_at` in `craftable_pro_users` table s
 
 ## Deactivation
 
-You can deactivate the user by selecting "Access" from the menu and choosing "Deactivate" in the user options.
+You can deactivate the user by choosing "Deactivate" in the user options.
 <br />
 
 <Image width={250} height={250} src="/images/deactivateButton.png" />
@@ -54,5 +53,5 @@ If `allow_only_active_users_login` in Craftable PRO config is set to `true`, thi
 You can delete a user by selecting "Access" from the menu and choosing "Delete" in the user options. The change will be reflected in the column `deleted_at` in `craftable_pro_users` table.
 
 <Callout type={"default"}>
-    We are using soft deletes in combination with email uniqueness. The e-mail address has to be unique, however after the user is deleted, he/she can register again with the same e-mail address even though he/she is currently soft deleted.
+    We are using soft deletes in combination with email uniqueness. The e-mail address has to be unique, however after the user is deleted, he/she can be created (via registration, invitation or even manually) again with the same e-mail address even though he/she is currently soft deleted.
 </Callout>

@@ -6,7 +6,6 @@ Often you want to be able to assign some media to your Eloquent models.
 
 Craftable provides you an option to do that. It uses Spatie's `spatie/laravel-medialibrary`, but it goes a bit further:
 - UI - provides the uploader, media viewer elements and media manager
-- Collections definition - inspired by the conversions definition
 - Auto-Process - saving the eloquent model automatically processes and attaches media collections from the request
 - Authorization - controls, who has the permission to attach specific medium to specific model
 - Private access - controls, who has the permission to view specific medium
@@ -128,12 +127,12 @@ It uses Spatie's fluent API, so for more info, check out their docs at https://d
 
 ### Media manager
 
-Craftable PRO includes media manager for management of images throughout all the models.
+Craftable PRO includes media manager for management of images throughout all the models. You can use it for example for searching for specific media using filters or cleaning your media files.
 
 <br/>
 <Image alt={'Roles'} width={550} height={550} src="/images/mediaManager.png" />
 
-In addition, you can upload photo directly through media manager. This file will be than unassigned (will be assigned to `UnassignedMedia` model).
+In addition, when you need just a link for some media without actually attaching it to a particular model, you can upload a photo directly through the media manager. This file will be unassigned (will be assigned to `UnassignedMedia` model).
 
 Media manager provides simple filtering, possibility to download or to delete media.
 
