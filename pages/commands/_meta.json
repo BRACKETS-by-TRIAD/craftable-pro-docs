@@ -1,3 +1,6 @@
 {
-  "crud-generator-command": "Crud generator"
+  "installation-command": "Installation",
+  "crud-generator-command": "Crud generator",
+  "create-admin-user": "Create admin user",
+  "translations-commands": "Translations"
 }
