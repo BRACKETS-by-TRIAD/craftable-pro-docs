@@ -1,12 +1,13 @@
 {
   "index": "Introduction",
   "getting-started": "Getting Started",
-  "frontend": "Frontend assets",
-  "basic-features": "Basic features",
-  "contact": {
-    "title": "Contact ↗",
+  "frontend": "Frontend Assets",
+  "basic-features": "Basic Features",
+
+  "demo": {
+    "title": "Demo",
     "type": "page",
-    "href": "https://twitter.com/craftablepro_",
+    "href": "https://demo.craftable.pro",
     "newWindow": true
   }
 }
