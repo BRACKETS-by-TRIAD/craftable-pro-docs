@@ -9,15 +9,62 @@ CRUD generator check if exist table and loads the table columns based on which i
 - Vue view files (Index, Create, Edit, Form)
 
 ## Usage
+
 ```bash copy
 php artisan craftable-pro:crud-generate {table_name}
 ```
-Parameter `table_name` must be a existing table
+Parameter `table_name` must be an existing table
 
-## Options
+### Options
+<br />
+<p>`--i|interactive` - Generate CRUD using interactive mode</p>
+<p>`--listing-columns` - Define columns shown in listing (index) page</p>
+<p>`--form-columns` - Define columns shown in form (edit/create) page </p>
+<p>`--dry-run` - Write what will happen without actual execution</p>
 
+### Interactive mode
 
+When using interactive mode, generator will ask you which form and listing columns should be generated. You can combine this mode with explicitly defined columns using `--listing-columns` and `--form-columns`. You won't be asked on things you have defined directly in command.
 
+**Example**:
 
+Command:
 
+```bash copy
+php artisan craftable-pro:crud-generate products -i --dry-run --listing-columns=id,title,description
+```
+
+Output:
+
+```bash
+ Starting the CRUD generation
+
+ Select show form columns. Default selected:
+ [id, title, description, price, is_visible, legacy_id]:
+ [0] id
+ [1] title
+ [2] description
+ [3] price
+ [4] is_visible
+ [5] legacy_id
+ > 1,2,3
+
++---------------+--------------------------------------------------+
+| Component     | Name                                             |
++---------------+--------------------------------------------------+
+| Model         | Product                                          |
+| Controller    | ProductController                                |
+| IndexRequest  | IndexProductRequest                              |
+| StoreRequest  | StoreProductRequest                              |
+| UpdateRequest | UpdateProductRequest                             |
+| Index columns | id,                                              |
+|               | title,                                           |
+|               | description                                      |
+| Form columns  | title,                                           |
+|               | description,                                     |
+|               | price                                            |
+| Migration     | 2023_01_18_100535_add_permissions_to_products.php|
++---------------+--------------------------------------------------+
+CRUD generated successfully
+```
 
