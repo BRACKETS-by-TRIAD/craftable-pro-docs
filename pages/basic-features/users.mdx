@@ -1,0 +1,57 @@
+import { Callout } from 'nextra-theme-docs';
+import Image from "next/image";
+
+# Users
+Craftable PRO comes with CRUD for users where you can manage who has the access to the Craftable PRO interface. Optionally, you can manage also other types of users for example in your frontend or mobile app (and assign them a different roles like Visitor or Member). Craftable PRO additionally introduces several handy features.
+
+## Self-registration
+
+<br />
+<Image alt={'Registration'} width={350} height={350} src="/images/register.png" />
+
+You can enable self-registration by editing the Craftable PRO config and setting `enabled` in `self_registration` to `true`. You can also set the default role for newly registered users. This is discussed more in the section [Roles & Permissions](/basic-features/roles-permissions#default-role-after-registration).
+
+```php filename="config/craftable-pro.php"
+ 'self_registration' => [
+        // define if users can self register into craftable pro interface
+        'enabled' => true,
+
+        // and if enabled, then which role(s) they should have assigned by default. Use role names here.
+        // It can be a string for one role or an array for multiple roles.
+        'default_role' => 'Guest',
+    ],
+```
+
+## Verification
+<br />
+<Image alt={'Verification'} width={450} height={450} src="/images/activate.png" />
+
+To require email verification before logging in, you have to set `require_email_verified` in Craftable PRO config file to `true`. Then every newly registered user will be obliged to confirm registration via email.
+
+```php filename="config/craftable-pro.php"
+// define if email must be verified in order to be able to log in
+'require_email_verified' => true,
+```
+There is a dedicated column `email_verified_at` in `craftable_pro_users` table serving this purpose.
+
+## Deactivation
+
+You can deactivate the user by choosing "Deactivate" in the user options.
+<br />
+
+<Image width={250} height={250} src="/images/deactivateButton.png" />
+
+If `allow_only_active_users_login` in Craftable PRO config is set to `true`, this user will no longer be able to log in. The change will be reflected in the column `active` in `craftable_pro_users` table.
+
+```php filename="config/craftable-pro.php"
+// define or only active users can log in
+'allow_only_active_users_login' => true,
+```
+
+## Delete (soft)
+
+You can delete a user by selecting "Access" from the menu and choosing "Delete" in the user options. The change will be reflected in the column `deleted_at` in `craftable_pro_users` table.
+
+<Callout type={"default"}>
+    We are using soft deletes in combination with email uniqueness. The e-mail address has to be unique, however after the user is deleted, he/she can be created (via registration, invitation or even manually) again with the same e-mail address even though he/she is currently soft deleted.
+</Callout>

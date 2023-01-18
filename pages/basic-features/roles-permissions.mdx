@@ -1,0 +1,57 @@
+import { Callout } from 'nextra-theme-docs';
+import Image from "next/image";
+
+# Roles & Permissions
+
+Thanks to Craftable PRO you have been given all you need for setting roles and permissions. We enhanced the popular [Spatie Permissions](https://spatie.be/docs/laravel-permission) package adding effective out-of-the-box UI.
+
+## Roles
+
+By default, Craftable PRO comes with tho main roles: Administrator and Guest. You are able to define as many roles as you need, all you need to do is create the migration that will add a new role.
+<br/>
+<Image alt={'Roles'} width={550} height={550} src="/images/roles.png" />
+
+### Default role after registration
+
+If you have enabled self-registration (see [Users](/basic-features/users#registration)) you can define the default role for newly registered users in Craftable PRO config:
+
+```php filename="config/craftable-pro.php"
+ 'self_registration' => [
+        // define if users can self register into craftable pro interface
+        'enabled' => true,
+
+        // and if enabled, then which role(s) they should have assigned by default. Use role names here.
+        // It can be a string for one role or an array for multiple roles.
+        'default_role' => 'Guest',
+    ],
+```
+
+## Permissions
+
+After roles are defined you can assign them the permissions by clicking on "Edit permissions" next to the roles in Craftable PRO admin.
+
+In your code permissions can be used for example in `authorize` method in `Request` like this:
+
+```php copy
+return Gate::allows('craftable-pro.posts.index');
+```
+
+or in directly in `Controllers`:
+
+```php copy
+$this->authorize('craftable-pro.posts.index');
+```
+
+### Translatable permissions
+
+For a better UI experience you may want to have manageable permissions translations. Craftable PRO has your back, just call
+
+```bash copy
+php artisan craftable-pro:generate-permission-translations
+```
+
+<Callout type="info">
+    If you are using pipelines for deployment, the recommended way is to run this command automatically within them. It can be called at any point after running the migrations.
+</Callout>
+
+Now you have all your permission strings available in the Translations manager (see [Translations](/basic-features/translations)).
