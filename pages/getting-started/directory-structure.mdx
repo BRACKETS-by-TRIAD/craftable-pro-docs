@@ -1,0 +1,52 @@
+# Directory structure
+
+After installation you will see the following directory structure:
+
+```bash
+├── app/
+│   └── Http/
+│       ├── Controllers/
+│       │   └── CraftablePro/
+│       └── Requests/
+│           └── CraftablePro/
+├── resources/
+│   ├── css/
+│   │   └── craftable-pro.css
+│   └── js/
+│       └── craftable-pro/
+│           ├── Components/
+│           │   ├── Logo.vue
+│           │   ├── Sidebar.vue
+│           │   └── UserDropdown.vue
+│           ├── Pages/
+│           └── index.ts
+├── craftable-pro.vite.config.js
+└── craftable-pro.tailwind.config.js
+````
+
+## Controllers directory
+
+`app/Http/Controllers/CraftablePro/`
+
+This directory is used by generator to generate controllers for your models. You can also add your own controllers here.
+
+## Requests directory
+
+`app/Http/Requests/CraftablePro/`
+
+This directory is used by generator to generate requests for your models. You can also add your own requests here.
+
+## Resources JS directory
+
+`resources/js/craftable-pro/`
+
+This directory contains all frontend resources related to Craftable Pro. Its structure is inspired by InertiaJS. You can learn more about it in [InertiaJS's documentation](https://inertiajs.com/).
+
+### resources/js/craftable-pro/Components
+
+This directory contains Vue components that are used in Craftable Pro. You can modify them to fit your needs or create some custom ones.
+
+### resources/js/craftable-pro/Pages
+
+This directory contains Vue components that are used as pages in Craftable Pro. You can modify existing ones to fit your needs or create some custom ones. This is also directory where generator puts your generated pages.
+For more information about Pages in InertiaJS, please check [InertiaJS's documentation](https://inertiajs.com/pages).

@@ -1,0 +1,176 @@
+# Vite configuration
+
+Installing Craftable PRO will copy to your project Vite config file `craftable-pro.vite.config.js` which you can run with `npm run craftable-pro:dev`. This is made to separate Craftable PRO assets building from your project assets building.
+
+## Scripts
+
+Craftable PRO comes with two NPM scripts in `package.json` to build assets. Those are:
+
+- `npm run craftable-pro:dev` -> runs Vite in development mode
+- `npm run craftable-pro:build` -> runs Vite in production mode
+
+## Aliases
+
+Craftable PRO needs three Vite aliases to work properly. These aliases are defined in the `craftable-pro.vite.config.js` file. Bellow is their explanation for better orientation:
+
+-   `@` - pointing to resources folder in your project, where are located some of the components for better customizability. This alias is used by some of the Craftable PRO components, so please don't change it since it might break your layout.
+-   `craftable-pro` - used to load all Craftable PRO components
+-   `ziggy` - used to load helper functions from Ziggy to used named routes in your project
+
+## Combining Vite configs
+
+If you use Vite in your project already for the frontend side of your application, you can combine your Vite config with the one from Craftable PRO. This is useful if you don't want to have two separate npm scripts for running Vite.
+
+To combine them, please follow steps bellow:
+
+<div className="steps-container">
+
+### Add Tailwind config to `craftable-pro.css`
+
+Add path to `craftable-pro.tailwind.config.js` in the `resources/css/craftable-pro.css` file:
+
+```css filename="resources/css/craftable-pro.css" copy {6}
+@import "/node_modules/highlight.js/styles/atom-one-dark.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@config "../../craftable-pro.tailwind.config.js";
+
+...
+```
+
+### Add input files
+
+Add these input files into your `vite.config.js` file:
+
+```js filename="vite.config.js" copy {10-11}
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+
+export default defineConfig({
+    plugins: [
+        laravel({
+            input: [
+                'resources/css/app.css',
+                'resources/js/app.js',
+                'resources/js/craftable-pro/index.ts',
+                'resources/css/craftable-pro.css',
+            ],
+            refresh: true,
+        }),
+    ],
+});
+```
+
+### Add Vue Vite plugin
+
+You may not need to add this plugin if you already have it in your `vite.config.js` file.
+
+```js filename="vite.config.js" copy {3,16-23}
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import vue from "@vitejs/plugin-vue";
+
+export default defineConfig({
+    plugins: [
+        laravel({
+            input: [
+                'resources/css/app.css',
+                'resources/js/app.js',
+                'resources/js/craftable-pro/index.ts',
+                'resources/css/craftable-pro.css',
+            ],
+            refresh: true,
+        }),
+        vue({
+            template: {
+                transformAssetUrls: {
+                    base: null,
+                    includeAbsolute: false,
+                },
+            },
+        }),
+    ],
+});
+```
+
+### Add aliases
+
+Bear in mind that these aliases will be afterwards available in your `resources/js/app.js` as well.
+
+```js filename="vite.config.js" copy {4,26-32}
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import vue from "@vitejs/plugin-vue";
+const path = require("path");
+
+export default defineConfig({
+    plugins: [
+        laravel({
+            input: [
+                'resources/css/app.css',
+                'resources/js/app.js',
+                'resources/js/craftable-pro/index.ts',
+                'resources/css/craftable-pro.css',
+            ],
+            refresh: true,
+        }),
+        vue({
+            template: {
+                transformAssetUrls: {
+                    base: null,
+                    includeAbsolute: false,
+                },
+            },
+        }),
+    ],
+    resolve: {
+        alias: {
+            "@": path.resolve(__dirname, "./resources/js"),
+            "craftable-pro": path.resolve(__dirname, "./vendor/brackets/craftable-pro/resources/js"),
+            "ziggy": path.resolve(__dirname, "./vendor/tightenco/ziggy"),
+        },
+    },
+});
+```
+
+### Add PostCSS configuration
+
+Create following file in the root of your project if it doesn't exist yet: `postcss.config.js` and add following content. This is required for Tailwind to work properly.
+
+```js filename="postcss.config.js"
+module.exports = {
+    plugins: {
+        tailwindcss: {},
+        autoprefixer: {},
+    },
+};
+```
+
+### Edit `package.json`
+
+Remove `craftable-pro:dev` and `craftable-pro:build` scripts from your `package.json` file, since they are not needed anymore.
+
+```json filename="package.json" {6-7}
+{
+    ...
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "craftable-pro:dev": "vite --config craftable-pro.vite.config.js",
+        "craftable-pro:build": "vite build --config craftable-pro.vite.config.js"
+    },
+    ...
+}
+```
+
+### Remove config
+
+Just delete the `craftable-pro.vite.config.js` file from your project once you completed the steps above.
+
+### Run Vite
+
+Run Vite with `npm run dev` to verify if everything works as expected. From now on, Vite will build not only your frontend files, but also the Craftable PRO ones with only single command
+
+</div>
