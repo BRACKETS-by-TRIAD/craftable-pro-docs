@@ -2,7 +2,7 @@
 
 To be able to cover the most of the use cases for translations, Craftable PRO comes with several commands.
 
-## Available commands
+## Scan translations
 
 To rescan paths defined in the config and search for new translatable strings (see [Translations Scanners](/basic-features/translations#scanners)), run:
 
@@ -10,17 +10,23 @@ To rescan paths defined in the config and search for new translatable strings (s
 php artisan craftable-pro:scan-translations
 ```
 
+## Publish translations
+
 To publish translated groups defined in config file (see [Translations Publishing](/basic-features/translations#publishing)), run:
 
 ```bash copy
 php artisan craftable-pro:publish-translations
 ```
 
+## Generate permission translations
+
 If you want to have human-readable permission titles in permissions manager (instead of for example `craftable-pro.posts.index`), you can generate permission translations and translate them in Translation manager (see [Translatable permissions](/basic-features/roles-permissions#translatable-permissions)).
 
 ```bash copy
 php artisan craftable-pro:generate-permission-translations
 ```
+
+## Generate locale translations
 
 If you want to have human-readable locale titles (instead of for example en_GB), you can generate locale translations and translate them in Translation manager.
 
