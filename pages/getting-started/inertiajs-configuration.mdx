@@ -1,0 +1,113 @@
+# InertiaJS configuration
+
+CraftablePro is using InertiaJS which allow to use `.vue` files for the frontend part of your application instead of Blade templates. You can learn more in [InertiaJS's documentation](https://inertiajs.com/)
+
+## Root template
+
+CraftablePro is using `resources/views/craftable-pro.blade.php` as a root template for InertiaJS to render the frontend part of your application.
+
+## Middleware
+
+To share data between the backend and the frontend part of your application, we use the `share` function in `Brackets\CraftablePro\Http\Middleware\CraftableProHandleInertiaRequests` middleware. This middleware is already applied to all Craftable PRO routes by default.
+
+If you need to edit shared data inside the middleware, you can do it by publishing the middleware with following command:
+
+```bash
+php artisan vendor:publish --tag=craftable-pro-handle-inertia-requests
+```
+
+Afterwards you have to change `handle-inertia-request-class` in `config/craftable.php` to `App\Http\Middleware\CraftableProHandleInertiaRequests`:
+
+```php filename="config/craftable-pro.php" {5}
+<?php
+
+return [
+    ...
+    'handle-inertia-request-class' => App\Http\Middleware\CraftableProHandleInertiaRequests::class,
+    ...
+];
+```
+
+## Using InertiaJS outside Craftable PRO
+
+If you would like to use an InertiaJS in the frontend part of your application we recommend you to separate the Craftable PRO routes with it's own InertiaJS middleware.
+
+
+<div className="steps-container">
+
+### Extract routes
+
+Move all `craftable-pro` routes from `routes/web.php` into a separate file `routes/craftable-pro.php`
+
+```php filename="routes/craftable-pro.php" copy
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+Route::craftablePro('admin');
+```
+
+### Update `app/Http/Kernel.php`
+
+Create a new route middleware group, with the same middlewares as you have in the web group:
+
+```php filename="Kernel.php" {15-22}
+class Kernel extends HttpKernel
+{
+    ...
+
+    protected $middlewareGroups = [
+        'web' => [
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \App\Http\Middleware\VerifyCsrfToken::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+
+        'craftable-pro' => [
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \App\Http\Middleware\VerifyCsrfToken::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+
+        'api' => [
+            'throttle:api',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+    ];
+}
+```
+
+### Update RouteServiceProvider.php
+Register this new middleware group in your RouteServiceProvider
+
+```php filename="RouteServiceProvider.php" {17-18}
+class RouteServiceProvider extends ServiceProvider
+{
+    ...
+
+    public function boot()
+    {
+        $this->configureRateLimiting();
+
+        $this->routes(function () {
+            Route::middleware('api')
+                ->prefix('api')
+                ->group(base_path('routes/api.php'));
+
+            Route::middleware('web')
+                ->group(base_path('routes/web.php'));
+
+            Route::middleware('craftable-pro')
+                ->group(base_path('routes/craftable-pro.php'));
+        });
+    }
+}
+```
+
+</div>
