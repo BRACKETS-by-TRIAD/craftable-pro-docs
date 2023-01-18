@@ -7,7 +7,7 @@ const config: DocsThemeConfig = {
   docsRepositoryBase: "https://github.com/BRACKETS-by-TRIAD/craftable-pro-docs",
   primaryHue: {
     light: 240,
-    dark: 220,
+    dark: 164,
   },
   footer: {
     text: (
@@ -18,6 +18,11 @@ const config: DocsThemeConfig = {
         © {new Date().getFullYear()}
       </span>
     ),
+  },
+  useNextSeoProps() {
+    return {
+      titleTemplate: "%s – Craftable PRO",
+    };
   },
 };
 
