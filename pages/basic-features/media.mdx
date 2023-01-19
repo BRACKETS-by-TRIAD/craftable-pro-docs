@@ -5,6 +5,7 @@ import Image from "next/image";
 Often you want to be able to assign some media to your Eloquent models.
 
 Craftable provides you an option to do that. It uses Spatie's `spatie/laravel-medialibrary`, but it goes a bit further:
+
 - UI - provides the uploader, media viewer elements and media manager
 - Auto-Process - saving the eloquent model automatically processes and attaches media collections from the request
 - Authorization - controls, who has the permission to attach specific medium to specific model
@@ -23,6 +24,7 @@ When adding files to your media library, `MediaConversions` can automatically cr
 First, we need to define the media collections for the specific model.
 
 Let's imagine a `Post` model for following examples. You need to register media collection like this:
+
 ```php
 use Illuminate\Database\Eloquent\Model;
 use Brackets\Media\HasMedia\ProcessMediaTrait;
@@ -59,6 +61,7 @@ class PostsController extends Controller {
 ```
 
 The `$request->gallery` should be an array in following format:
+
 ```php
 [
     [
@@ -125,24 +128,6 @@ class Post extends Model implements HasMedia {
 
 It uses Spatie's fluent API, so for more info, check out their docs at https://docs.spatie.be/laravel-medialibrary/v9/converting-images/defining-conversions.
 
-### Media manager
-
-Craftable PRO includes media manager for management of images throughout all the models. You can use it for example for searching for specific media using filters or cleaning your media files.
-
-<br/>
-<Image alt={'Roles'} width={550} height={550} src="/images/mediaManager.png" />
-
-In addition, when you need just a link for some media without actually attaching it to a particular model, you can upload a photo directly through the media manager. This file will be unassigned (will be assigned to `UnassignedMedia` model).
-
-Media manager provides simple filtering, possibility to download or to delete media.
-
-<br/>
-<Image alt={'Roles'} width={300} height={300} src="/images/mediaManagerActions.png" />
-
-### UI elements
-
-TODO
-
 ### Retrieve
 
 To retrieve files you can use the `getMedia` method:
@@ -174,3 +159,66 @@ public function registerMediaCollections(): void
             ->canUpload('media.upload') // Set the ability (Gate) which is required to upload & attach new files to the model
     }
 ```
+
+## Media manager
+
+Craftable PRO includes media manager for management of images throughout all the models. You can use it for example for searching for specific media using filters or cleaning your media files.
+
+<br />
+<Image alt={"Roles"} width={550} height={550} src="/images/mediaManager.png" />
+
+In addition, when you need just a link for some media without actually attaching it to a particular model, you can upload a photo directly through the media manager. This file will be unassigned (will be assigned to `UnassignedMedia` model).
+
+Media manager provides simple filtering, possibility to download or to delete media.
+
+<br />
+<Image
+  alt={"Roles"}
+  width={300}
+  height={300}
+  src="/images/mediaManagerActions.png"
+/>
+
+### Dropzone
+
+To use Dropzone component, import it from `craftable-pro/Components`:
+
+```js copy
+import { Dropzone } from "craftable-pro/Components";
+```
+
+Then you can use it like this. Bear in mind that `v-model` has to be an empty array or array of media files from model and `name` has to be collection name of model.
+
+```vue
+<template>
+  <Dropzone v-model="form.thumbnail" name="thumbnail" />
+</template>
+<script setup>
+...
+
+const { form, submit } = useForm(
+    {
+        ...
+        thumbnail: props.article?.media
+            ? props.article.media.filter(
+                  (item) => item.collection_name === "thumbnail"
+              )
+            : []
+    }
+);
+</script>
+```
+
+You can also pass additional options to Dropzone. For example:
+
+```js
+<Dropzone
+    v-model="form.thumbnail"
+    name="thumbnail"
+    :maxNumberOfFiles="1"
+    :maxFileSize="1024 * 1024 * 2"
+    accept="image/png,image/jpeg"
+    :onlyThumbs="true"
+```
+
+Where `maxNumberOfFiles` is the maximum number of files that can be uploaded, `maxFileSize` is the maximum size of file that can be uploaded in bytes, `accept` is the accepted file types (in MIME type format) and `onlyThumbs` is a boolean that determines whether to show only thumbnails or to show thumbnails and inputs for custom properties.
