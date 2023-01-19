@@ -4,10 +4,11 @@ import Logo from "./components/logo";
 
 const config: DocsThemeConfig = {
   logo: <Logo />,
-  docsRepositoryBase: "https://github.com/BRACKETS-by-TRIAD/craftable-pro-docs",
+  docsRepositoryBase:
+    "https://github.com/BRACKETS-by-TRIAD/craftable-pro-docs/tree/main/",
   primaryHue: {
     light: 240,
-    dark: 164,
+    dark: 190,
   },
   footer: {
     text: (
