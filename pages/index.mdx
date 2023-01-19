@@ -1,3 +1,38 @@
+import Image from "next/image";
+import { Card, Cards } from "components/card";
+import {
+  CommandLineIcon,
+  SparklesIcon,
+  PuzzlePieceIcon,
+} from "@heroicons/react/24/outline";
+
 # Craftable PRO
 
-Craftable PRO is admin panel for your Laravel project. It's build with InertiaJS, Vue and TailwindCSS.
+Craftable PRO is admin panel for your Laravel project build with InertiaJS, Vue and TailwindCSS.
+
+<br />
+
+<Cards>
+  <Card
+    icon={<CommandLineIcon />}
+    title="Getting Started"
+    href="/getting-started"
+  />
+  <Card icon={<SparklesIcon />} title="Frontend Assets" href="/frontend" />
+  <Card
+    icon={<PuzzlePieceIcon />}
+    title="Basic Features"
+    href="/basic-features"
+  />
+</Cards>
+
+<br />
+
+<div className="shadow-sm shadow-gray-100 rounded-md overflow-hidden border border-gray-200">
+  <Image
+    alt="User's listing"
+    width={832}
+    height={488}
+    src="/images/user-listing.png"
+  />
+</div>
