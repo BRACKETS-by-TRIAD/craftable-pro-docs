@@ -1,7 +1,7 @@
-
 # CRUD Generator command
 
 CRUD generator check if exist table and loads the table columns based on which it will generate:
+
 - Controller class
 - Model class
 - Index,Store,Update requests class
@@ -11,11 +11,13 @@ CRUD generator check if exist table and loads the table columns based on which i
 ## Usage
 
 ```bash copy
-php artisan craftable-pro:crud-generate {table_name}
+php artisan craftable-pro:generate-crud {table_name}
 ```
+
 Parameter `table_name` must be an existing table
 
 ### Options
+
 <br />
 <p>`--i|interactive` - Generate CRUD using interactive mode</p>
 <p>`--listing-columns` - Define columns shown in listing (index) page</p>
@@ -31,7 +33,7 @@ When using interactive mode, generator will ask you which form and listing colum
 Command:
 
 ```bash copy
-php artisan craftable-pro:crud-generate products -i --dry-run --listing-columns=id,title,description
+php artisan craftable-pro:generate-crud products -i --dry-run --listing-columns=id,title,description
 ```
 
 Output:
@@ -67,4 +69,3 @@ Output:
 +---------------+--------------------------------------------------+
 CRUD generated successfully
 ```
-
