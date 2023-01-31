@@ -1,9 +1,8 @@
 {
   "index": "Introduction",
   "getting-started": "Getting Started",
-  "frontend": "Frontend Assets",
   "basic-features": "Basic Features",
-
+  "frontend": "Frontend Assets",
   "demo": {
     "title": "Demo",
     "type": "page",
