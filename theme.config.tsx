@@ -13,10 +13,7 @@ const config: DocsThemeConfig = {
   footer: {
     text: (
       <span>
-        <a href="https://meetbrackets.com/" target="_blank">
-          BRACKETS by Triad s.r.o
-        </a>{" "}
-        © {new Date().getFullYear()}
+        © {new Date().getFullYear()} Designed and crafted with all the love by<a href="https://meetbrackets.com/" target="_blank">BRACKETS</a>.
       </span>
     ),
   },

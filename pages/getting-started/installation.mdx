@@ -2,25 +2,25 @@ import { Callout, Tab, Tabs } from "nextra-theme-docs";
 
 # Installation
 
-Craftable PRO can be installed to existing Laravel project. If you don't have one, please follow steps in the official [Laravel documentation](https://laravel.com/docs/9.x/installation).
+Craftable PRO is a package for Laravel that can be installed on any existing Laravel 9+ project. If you're starting a new project, install Laravel first - please follow steps in the official [Laravel documentation](https://laravel.com/docs/9.x/installation).
 
 <div className="steps-container">
 
-### Register private repository
+### Register the repository
 
-After obtaining a valid Craftable PRO license you need to add our private repository to Composer in your Laravel project:
+After obtaining a valid [Craftable PRO license](https://craftable.pro) you need to add our private repository to your composer.json:
 
 ```bash copy
-composer config repositories.craftable-pro vcs git@github.com:BRACKETS-by-TRIAD/craftable-pro.git
+composer config repositories.craftable-pro composer https://packages.craftable.pro/
 ```
 
-### Require composer package
+### Add the package
 
 ```bash copy
 composer require brackets/craftable-pro
 ```
 
-### Run installation command
+### Install the package
 
 This command will publish resources, migrations, configs, edit some configuration files and more. <br/>
 Check out [Install command](/commands/installation-command) section for more information.
@@ -51,6 +51,8 @@ npm run craftable-pro:build
 
 ### Test your installation
 
-After running Vite, you should be able to visit Craftable PRO at `http://localhost:8000/admin`. Login with the credentials provided during installation.
+After running Vite, you should be able to visit Craftable PRO at `http://localhost/admin`.
+
+Login with the credentials provided during installation.
 
 </div>

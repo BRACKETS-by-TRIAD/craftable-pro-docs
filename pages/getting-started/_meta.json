@@ -1,7 +1,7 @@
 {
   "installation": "Installation",
   "directory-structure": "Directory Structure",
-  "config-file": "Config File",
+  "config-file": "Configuration",
   "inertiajs-configuration": "InertiaJS Configuration",
   "vite-configuration": "Vite Configuration"
 }
