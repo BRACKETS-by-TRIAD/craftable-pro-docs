@@ -27,16 +27,16 @@ Let's imagine a `Post` model for following examples. You need to register media 
 
 ```php
 use Illuminate\Database\Eloquent\Model;
-use Brackets\Media\HasMedia\ProcessMediaTrait;
-use Brackets\Media\HasMedia\AutoProcessMediaTrait;
-use Brackets\Media\HasMedia\HasMediaCollectionsTrait;
+use Brackets\CraftablePro\Media\ProcessMediaTrait;
+use Brackets\CraftablePro\Media\AutoProcessMediaTrait;
+use Brackets\CraftablePro\Media\InteractsWithMedia;
 use Spatie\MediaLibrary\HasMedia;
 
 class Post extends Model implements HasMedia {
 
     use ProcessMediaTrait;
     use AutoProcessMediaTrait;
-    use HasMediaCollectionsTrait;
+    use InteractsWithMedia;
 
     public function registerMediaCollections(): void {
         $this->addMediaCollection('gallery');
@@ -96,21 +96,51 @@ Once turned-off you can still process media manually using `processMedia()` meth
 
 ### Media Conversions
 
-If you want to adjust media during handling (e.g. resize, crop, optimize, fine tune colors) you can do it by using Spatie's method `registerMediaConversions` as shown below.
+By default, we provide handy trait `HasMediaPreviewsTrait` that will automatically create `preview` conversion for each registered media collection. You can use it like this:
 
-```php
+```php {6-7,14,20-23}
 use Illuminate\Database\Eloquent\Model;
-use Brackets\Media\HasMedia\ProcessMediaTrait;
-use Brackets\Media\HasMedia\AutoProcessMediaTrait;
-use Brackets\Media\HasMedia\HasMediaCollectionsTrait;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Brackets\CraftablePro\Media\ProcessMediaTrait;
+use Brackets\CraftablePro\Media\AutoProcessMediaTrait;
+use Brackets\CraftablePro\Media\InteractsWithMedia;
 use Spatie\MediaLibrary\HasMedia;
+use Brackets\CraftablePro\Media\HasMediaPreviewsTrait;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Post extends Model implements HasMedia {
 
     use ProcessMediaTrait;
     use AutoProcessMediaTrait;
-    use HasMediaCollectionsTrait;
+    use InteractsWithMedia;
+    use HasMediaPreviewsTrait;
+
+    public function registerMediaCollections(): void {
+        $this->addMediaCollection('gallery');
+    }
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->autoRegisterPreviews();
+    }
+```
+
+If you want to create your own conversions (adjust width, height, crop, optimize, fine tune colors...) you can do so like this:
+
+```php {25-28}
+use Illuminate\Database\Eloquent\Model;
+use Brackets\CraftablePro\Media\ProcessMediaTrait;
+use Brackets\CraftablePro\Media\AutoProcessMediaTrait;
+use Brackets\CraftablePro\Media\InteractsWithMedia;
+use Spatie\MediaLibrary\HasMedia;
+use Brackets\CraftablePro\Media\HasMediaPreviewsTrait;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
+class Post extends Model implements HasMedia {
+
+    use ProcessMediaTrait;
+    use AutoProcessMediaTrait;
+    use InteractsWithMedia;
+    use HasMediaPreviewsTrait;
 
     public function registerMediaCollections(): void
     {
@@ -119,9 +149,12 @@ class Post extends Model implements HasMedia {
 
     public function registerMediaConversions(Media $media = null): void
     {
+        $this->autoRegisterPreviews();
+
         $this->addMediaConversion('detail_hd')
             ->width(1920)
             ->height(1080)
+            ->sharpen(10)
             ->performOnCollections('gallery');
     }
 ```
