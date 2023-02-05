@@ -1,10 +1,10 @@
 # InertiaJS configuration
 
-CraftablePro is using InertiaJS which allow to use `.vue` files for the frontend part of your application instead of Blade templates. You can learn more in [InertiaJS's documentation](https://inertiajs.com/)
+Craftable PRO is using InertiaJS which allow to use `.vue` files for the frontend part of your application instead of Blade templates. You can learn more in [InertiaJS's documentation](https://inertiajs.com/)
 
 ## Root template
 
-CraftablePro is using `resources/views/craftable-pro.blade.php` as a root template for InertiaJS to render the frontend part of your application.
+Craftable PRO is using `resources/views/craftable-pro.blade.php` as a root template for InertiaJS to render the frontend part of your application.
 
 ## Middleware
 
@@ -31,7 +31,6 @@ return [
 ## Using InertiaJS outside Craftable PRO
 
 If you would like to use an InertiaJS in the frontend part of your application we recommend you to separate the Craftable PRO routes with it's own InertiaJS middleware.
-
 
 <div className="steps-container">
 
@@ -84,6 +83,7 @@ class Kernel extends HttpKernel
 ```
 
 ### Update RouteServiceProvider.php
+
 Register this new middleware group in your RouteServiceProvider
 
 ```php filename="RouteServiceProvider.php" {17-18}

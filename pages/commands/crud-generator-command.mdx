@@ -1,71 +1,320 @@
+import { Callout, Tabs, Tab } from "nextra-theme-docs";
+
 # CRUD Generator command
 
-CRUD generator check if exist table and loads the table columns based on which it will generate:
+CRUD Generator allows you to easily generate CRUD for existing table. It will generate:
 
-- Controller class
 - Model class
-- Index,Store,Update requests class
+- Controller class
+- Request classes
 - Routes
-- Vue view files (Index, Create, Edit, Form)
+- Vue files for listing and form
+- Typescript definitons
+- Export class
 
 ## Usage
 
+We support two ways of generating CRUD. Using command options or using wizard mode which will guide you through the process.
+
+To use wizard mode, you can either run the command without any arguments like this:
+
 ```bash copy
-php artisan craftable-pro:generate-crud {table_name}
+php artisan craftable-pro:generate-crud
 ```
 
-Parameter `table_name` must be an existing table
+Or you can run the command with table name with `-w` or `--wizard` option like so:
+
+```bash copy
+php artisan craftable-pro:generate-crud {table_name} -w
+```
+
+Alternatively you can simply run the command with table name and it will generate CRUD based on the options you provided without any questions. If you do not provide any options, the generator will do its best to guess what you need and will prefill most of the options with default values.
+
+For example:
+
+```bash copy
+php artisan craftable-pro:generate-crud {table_name} --listing-columns=id,title,description --sortable-columns=id,title --form-columns=title,description,price
+```
+
+<Callout>Parameter `table_name` must be an existing table</Callout>
 
 ### Options
 
-<br />
-<p>`--i|interactive` - Generate CRUD using interactive mode</p>
-<p>`--listing-columns` - Define columns shown in listing (index) page</p>
-<p>`--form-columns` - Define columns shown in form (edit/create) page </p>
-<p>`--dry-run` - Write what will happen without actual execution</p>
+- `--w|wizard` -> Wizard mode asks for most common options interactively
+- `--listing-columns` -> List and select columns for index page
+- `--sortable-columns` -> List of columns which listing can be sorted by
+- `--form-columns` -> List and select columns for form page
+- `--publishable-column` -> Name of column which should be used for `publishable` feature
+- `--translatable-columns` -> List of columns which should be `translatable`
+- `--media-collections` -> Names of media collections which should be registered for model
+- `--image-collections` -> Names of media collections which should have conversions generated as well
+- `--add-relation` -> Definition of relation on model using following syntax:
 
-### Interactive mode
+  ```
+  <relationType>(<relatedModel>-><modelAccessor>,<?foreign_key>,<?owner_key>)
+  (ie: `belongsTo(Author->title)` or `belongsTo(Author->title,author_id,id)`)
+  ```
 
-When using interactive mode, generator will ask you which form and listing columns should be generated. You can combine this mode with explicitly defined columns using `--listing-columns` and `--form-columns`. You won't be asked on things you have defined directly in command.
+- `--with-export` -> Whether listing should have export function or not
+- `--run-migration` -> Whether to run permission migration after generating CRUD or not
+- `--without-routes` -> Do not generate routes
+- `--without-sidebar` -> Do not append new module into the sidebar
+- `--dry-run` -> Display all information without actually generating anything';
 
-**Example**:
+## Wizard mode
 
-Command:
+When using wizard mode, generator will ask you a question about each feature you haven't provided directly with command option. You can combine this mode with explicitly defined options using their name from the list above.
 
-```bash copy
-php artisan craftable-pro:generate-crud products -i --dry-run --listing-columns=id,title,description
+Bellow you will find all the options explained in more detail.
+
+### Listing columns
+
+This option allows you to select columns which will be displayed in the listing. You can select multiple columns by separating them with comma.
+
+{/* prettier-ignore */}
+<Tabs items={["Using wizard", "Using command option"]}>
+  <Tab>
+    ```
+    Which columns should be visible on the listing page? [id,title,slug,perex,published_at,author_id]
+    id .................................................................... 0
+    title ................................................................. 1
+    slug .................................................................. 2
+    perex ................................................................. 3
+    published_at .......................................................... 4
+    author_id ............................................................. 5
+    >id,title,slug,published_at
+    ````
+  </Tab>
+  <Tab>
+  ```
+  --listing-columns=id,title,slug,published_at
+  ```
+  </Tab>
+</Tabs>
+
+### Sortable columns
+
+This option allows you to select columns which will be sortable in the listing. You can only choose from columns selected in the previous step. You can select multiple columns by separating them with comma.
+
+{/* prettier-ignore */}
+<Tabs items={["Using wizard", "Using command option"]}>
+  <Tab>
+    ```
+    Which columns should be sortable in listing? [id,title,slug,perex,published_at,author_id]
+    id .................................................................... 0
+    title ................................................................. 1
+    slug .................................................................. 2
+    perex ................................................................. 3
+    published_at .......................................................... 4
+    author_id ............................................................. 5
+    >id,title,published_at
+    ````
+  </Tab>
+  <Tab>
+  ```
+  --sortable-columns=id,title,published_at
+  ```
+  </Tab>
+</Tabs>
+
+### Form columns
+
+This option allows you to select columns which will be visible in the Vue form. You can select multiple columns by separating them with comma.
+
+{/* prettier-ignore */}
+<Tabs items={["Using wizard", "Using command option"]}>
+  <Tab>
+    ```
+    Which columns should be visible on form page? [title,slug,perex]
+    title ................................................................. 0
+    slug .................................................................. 1
+    perex ................................................................. 2
+    published_at .......................................................... 3
+    author_id ............................................................. 4
+    >title,perex,published_at,author_id
+    ````
+  </Tab>
+  <Tab>
+  ```
+  --form-columns=title,perex,published_at
+  ```
+  </Tab>
+</Tabs>
+
+### Translatable columns
+
+This option allows you to select columns which will be translatable. You can only choose from those, which have defined `json` or `jsonb` type id database. You can select multiple columns by separating them with comma.
+
+{/* prettier-ignore */}
+<Tabs items={["Using wizard", "Using command option"]}>
+  <Tab>
+    ```
+    Which columns should be translatable (only JSON columns)? [title]
+    title ................................................................. 0
+    slug .................................................................. 1
+    perex ................................................................. 2
+    >title,slug,perex
+    ````
+  </Tab>
+  <Tab>
+  ```
+  --translatable-columns=title,slug,perex
+  ```
+  </Tab>
+</Tabs>
+
+### Translatable columns
+
+This option allows you to select column which will be used for publishable feature. This will generate nice button in listing, with which you can quickly schedule or unpublish certain record. You can only choose from `date` or `datetime` columns.
+
+{/* prettier-ignore */}
+<Tabs items={["Using wizard", "Using command option"]}>
+  <Tab>
+    ```
+    Which column should be used for publishable feature? [published_at]
+    published_at .......................................................... 0
+    >published_at
+    ````
+  </Tab>
+  <Tab>
+  ```
+  --publishable-column=published_at
+  ```
+  </Tab>
+</Tabs>
+
+### Media collections
+
+This option allows you to write names of media collection you want to register for your model. You can register multiple collections by separating them with comma.
+
+{/* prettier-ignore */}
+<Tabs items={["Using wizard", "Using command option"]}>
+  <Tab>
+    ```
+    Write name of media collections you want to register. Separate them by comma or leave empty if you don't want any media collections.
+    >hero,files
+    ````
+  </Tab>
+  <Tab>
+  ```
+  --media-collections=hero,files
+  ```
+  </Tab>
+</Tabs>
+
+### Image collections
+
+This option allows you to select which of the media collection you want to use as an image collections. You can select multiple collections by separating them with comma.
+
+{/* prettier-ignore */}
+<Tabs items={["Using wizard", "Using command option"]}>
+  <Tab>
+    ```
+    Select which of those media collections should be of type image?
+    hero .................................................................. 0
+    files ................................................................. 1
+    >hero
+    ````
+  </Tab>
+  <Tab>
+  ```
+  --image-collections=hero
+  ```
+  </Tab>
+</Tabs>
+
+### Relations
+
+This option allows you to define relationships on your model. Since the DX is different in wizard mode and option command, please take a look at the examples bellow for more information.
+
+{/* prettier-ignore */}
+<Tabs items={["Using wizard", "Using command option"]}>
+    <Tab>
+        This option consist of multiple steps, so please take a look at the example bellow to get the idea about which question you can expect. Bear in mind that some of them might change depending on your choices.
+        ```
+        Do you want to add a relation? [no]
+        yes .................................................................. 0
+        no ................................................................... 1
+        >yes
+        ```
+        ```
+        What is the type of the relation? [belongsTo]
+        belongsTo ............................................................ 0
+        belongsToMany ........................................................ 1
+        >belongsTo
+        ```
+        ```
+        What is the name of the related model?
+        Author ............................................................... 0
+        Comment .............................................................. 1
+        ..custom ............................................................. 2
+        >Author
+        ```
+        ```
+        What is the foreign key column in Post model? [author_id]
+        id ................................................................... 0
+        author_id ............................................................ 1
+        >author_id
+        ```
+        ```
+        What is the referenced primary key column in Author model? [id]
+        id ................................................................... 0
+        >id
+        ```
+        ```
+        Which attribute should represent the Author model in Post module (typically 'name' or 'title')? [first_name]
+        first_name ........................................................... 0
+        last_name ............................................................ 0
+        >first_name
+        ```
+        At the end you can decide if you want to define another relation or not.
+        ```
+        Do you want to add a relation? [no]
+        yes .................................................................. 0
+        no ................................................................... 1
+        >no
+        ```
+    </Tab>
+    <Tab>
+        Command option bellow will result in the same outcome when using the Wizard.
+        ```
+        --add-relation=belongsTo(Author->first_name,author_id,id)
+        ```
+
+        You can define more relations by adding another option like this:
+
+        ```
+        --add-relation=belongsTo(Author->first_name,author_id,id) --add-relation=belongsToMany(Tag->title,tag_post,tag_id,post_id)
+        ```
+    </Tab>
+
+</Tabs>
+
+### Export
+
+This option allows you to define if you want to generate export of your records to excel.
+
+{/* prettier-ignore */}
+<Tabs items={["Using wizard", "Using command option"]}>
+    <Tab>
+        ```
+        Do you want to use export feature? [no]
+        yes .................................................................. 0
+        no ................................................................... 1
+        >yes
+        ```
+    </Tab>
+    <Tab>
+        ```
+        --with-export
+        ```
+    </Tab>
+</Tabs>
+
+### Dry run
+
+This option allows you to see outocome of your choices without actually generating or changing any files. You have to specify it when running the command itself:
+
 ```
-
-Output:
-
-```bash
- Starting the CRUD generation
-
- Select show form columns. Default selected:
- [id, title, description, price, is_visible, legacy_id]:
- [0] id
- [1] title
- [2] description
- [3] price
- [4] is_visible
- [5] legacy_id
- > 1,2,3
-
-+---------------+--------------------------------------------------+
-| Component     | Name                                             |
-+---------------+--------------------------------------------------+
-| Model         | Product                                          |
-| Controller    | ProductController                                |
-| IndexRequest  | IndexProductRequest                              |
-| StoreRequest  | StoreProductRequest                              |
-| UpdateRequest | UpdateProductRequest                             |
-| Index columns | id,                                              |
-|               | title,                                           |
-|               | description                                      |
-| Form columns  | title,                                           |
-|               | description,                                     |
-|               | price                                            |
-| Migration     | 2023_01_18_100535_add_permissions_to_products.php|
-+---------------+--------------------------------------------------+
-CRUD generated successfully
+php artisan craftable-pro:generate-crud -w --dry-run
 ```
