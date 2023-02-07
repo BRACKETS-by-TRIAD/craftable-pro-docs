@@ -5,66 +5,71 @@ Examine the example bellow to see how to use them:
 
 ```html
 <template>
-    <Card :title="$t('craftable-pro', 'Some optional card title')">
-        <div class="grid grid-cols-6 gap-6">
-            <TextInput
-                v-model="form.name"
-                name="name"
-                :label="$t('craftable-pro', 'Name')"
-                class="col-span-6 sm:col-span-3"
-            />
-            <TextInput
-                v-model="form.email"
-                name="email"
-                :label="$t('craftable-pro', 'E-mail')"
-                type="email"
-                class="col-span-6 sm:col-span-3"
-            />
-            <Multiselect
-                v-model="form.locale"
-                name="locale"
-                :label="$t('craftable-pro', 'Locale')"
-                mode="single"
-                :options="locales"
-                class="col-span-4 sm:col-span-2 sm:col-start-1"
-            />
-        </div>
+  <PageHeader :title="$t('craftable-pro', 'New form page')" />
 
-        <template #footer>
-            <CardFooter class="bg-gray-50 text-right">
-                <button
-                    :leftIcon="ArrowDownTrayIcon"
-                    @click="submit"
-                    :loading="form.processing"
-                >
-                    {{ $t("craftable-pro", "Save") }}
-                </button>
-            </CardFooter>
-        </template>
+  <PageContent>
+    <Card :title="$t('craftable-pro', 'Some optional card title')">
+      <div class="grid grid-cols-6 gap-6">
+        <TextInput
+          v-model="form.name"
+          name="name"
+          :label="$t('craftable-pro', 'Name')"
+          class="col-span-6 sm:col-span-3"
+        />
+        <TextInput
+          v-model="form.email"
+          name="email"
+          :label="$t('craftable-pro', 'E-mail')"
+          type="email"
+          class="col-span-6 sm:col-span-3"
+        />
+        <Multiselect
+          v-model="form.locale"
+          name="locale"
+          :label="$t('craftable-pro', 'Locale')"
+          mode="single"
+          :options="locales"
+          class="col-span-4 sm:col-span-2 sm:col-start-1"
+        />
+      </div>
+
+      <template #footer>
+        <CardFooter class="bg-gray-50 text-right">
+          <button
+            :leftIcon="ArrowDownTrayIcon"
+            @click="submit"
+            :loading="form.processing"
+          >
+            {{ $t("craftable-pro", "Save") }}
+          </button>
+        </CardFooter>
+      </template>
     </Card>
+  </PageContent>
 </template>
 <script setup lang="ts">
-import { ArrowDownTrayIcon } from "@heroicons/vue/24/outline";
-import {
+  import { PageHeader, PageContent } from 'craftable-pro/Components'
+  import { ArrowDownTrayIcon } from "@heroicons/vue/24/outline";
+  import {
     Button,
     Card,
     CardContent,
     CardFooter,
     TextInput,
     Multiselect,
-} from "craftable-pro/Components";
-import { useForm } from "craftable-pro/helpers";
+  } from "craftable-pro/Components";
+  import { useForm } from "craftable-pro/helpers";
 
-interface Props {
+  interface Props {
     locales?: string[];
-}
+  }
 
-const props = withDefaults(defineProps<Props>(), {
+  const props = withDefaults(defineProps<Props>(), {
     locales: () => ["en"],
-});
+  });
 
-// This is detaily explained in the next section
-const { form, submit } = useForm(...);
+  // This is detaily explained in the next section
+  const { form, submit } = useForm(...);
 </script>
 ```
 
@@ -74,26 +79,26 @@ Craftable PRO is built with [InertiaJS](https://inertiajs.com/). We use their `u
 However we extended it to make it more flexible and to add some extra functionality.
 
 To use it, import it using following import:
+
 ```js copy
 import { useForm } from "craftable-pro/helpers";
 ```
 
 Then you can use it in your component like this:
+
 ```vue
-<template>
-    ...
-</template>
+<template>...</template>
 <script setup lang="ts">
 import { useForm } from "craftable-pro/helpers";
 
 const { form, submit } = useForm(
-    {
-        name: "",
-        email: "",
-        locale: [],
-    },
-    route("craftable-pro-users.store"),
-    "post"
+  {
+    name: "",
+    email: "",
+    locale: [],
+  },
+  route("craftable-pro-users.store"),
+  "post"
 );
 </script>
 ```

@@ -1,17 +1,26 @@
-import { Callout } from 'nextra-theme-docs';
-import Image from "next/image";
+import { Callout } from "nextra-theme-docs";
+import Image from "components/image";
 
 # Translations
 
 Craftable PRO comes with a complex built-in system which is able to scan through the files and load translatable strings into the Translations Manager.
 
 ## Translation manager
+
 The Database structure of Craftable PRO Translations is based on [Spatie Laravel Translatable](https://spatie.be/docs/laravel-translatable) package. On top of it, Craftable Pro brings a nice UI for editing translation strings.
 
 <br />
-<Image alt={'Export translations'} width={850} height={850} src="/images/transManager1.png" />
+<div className="flex items-start gap-4">
+  <Image alt={"Export translations"} src="/images/translations.png" />
+  <Image alt={"Export translations"} src="/images/edit-translations.png" />
+</div>
+
+### Actions
+
+Within this Translation page are available several actions detaily described on this page below.
+
 <br />
-<Image alt={'Export translations'} width={850} height={850} src="/images/transManager2.png" />
+<Image alt="Export translations" src="/images/translations-actions.png" />
 
 ## Scanners
 
@@ -57,7 +66,9 @@ php artisan craftable-pro:scan-translations
 ```
 
 <Callout type="info">
-    If you are using pipelines for deployment, the recommended way is to run this command automatically within them. It can be called at any point after pulling the changes.
+  If you are using pipelines for deployment, the recommended way is to run this
+  command automatically within them. It can be called at any point after pulling
+  the changes.
 </Callout>
 
 All translations are then available on the Translations page, where you can edit them.
@@ -124,29 +135,35 @@ public/lang
      └── craftable-pro.json
 ```
 
-## Adding new languages
+## Adding new locales
 
-You are able to create a new language on the Settings page (see [Settings](/basic-features/settings)). All you need to do is to add a new locale to multiselect and hit enter.
+You are able to create a new locale on the Settings page (see [Settings](/basic-features/settings)). All you need to do is to add a new locale to multiselect and hit enter.
+
 <br />
-<Image alt={'Import translations'} width={300} height={300} src="/images/newLang.png" />
-
+<Image alt="New locale" src="/images/new-locale.png" />
 
 ## Export
 
 Translation Manager provides the ability to export data in selected languages as .xlsx file as shown below.
+
 <br />
-<Image alt={'Export translations'} width={250} height={250} src="/images/exportTransButton.png" />
-<br />
-<Image alt={'Export translations'} width={450} height={450} src="/images/exportTrans.png" />
+<Image alt="Export translations" src="/images/export-translations.png" />
 
 ## Import
 
 Translation Manager provides the ability to import data in a selected language from .xlsx file.
+
 <br />
-<Image alt={'Import translations'} width={450} height={450} src="/images/importTrans.png" />
+<Image
+  alt="Import translations"
+  width={450}
+  height={450}
+  src="/images/import-translations.png"
+/>
 
 <Callout type="warning">
-    Imported file must have an identical structure as generated in Translations export.
+  Imported file must have an identical structure as generated in Translations
+  export.
 </Callout>
 
 If you check `Do not override existing translations` option only new translations will be imported. Otherwise, if your import file contains conflicts with the current version of translations, the import will ask you to resolve conflicts to choose which version of translations you want to store.
