@@ -1,5 +1,5 @@
-import { Callout } from 'nextra-theme-docs';
-import Image from "next/image";
+import { Callout } from "nextra-theme-docs";
+import Image from "components/image";
 
 # Roles & Permissions
 
@@ -8,8 +8,9 @@ Thanks to Craftable PRO you have been given all you need for setting roles and p
 ## Roles
 
 By default, Craftable PRO comes with tho main roles: Administrator and Guest. You are able to define as many roles as you need, all you need to do is create the migration that will add a new role.
-<br/>
-<Image alt={'Roles'} width={550} height={550} src="/images/roles.png" />
+
+<br />
+<Image alt="Roles" src="/images/roles.png" />
 
 ### Default role after registration
 
@@ -28,7 +29,10 @@ If you have enabled self-registration (see [Users](/basic-features/users#registr
 
 ## Permissions
 
-After roles are defined you can assign them the permissions by clicking on "Edit permissions" next to the roles in Craftable PRO admin.
+After roles are defined you can assign them the permissions by clicking on "Manage permissions" next to the roles in Craftable PRO admin.
+
+<br />
+<Image alt="Permission" src="/images/permissions.png" />
 
 In your code permissions can be used for example in `authorize` method in `Request` like this:
 
@@ -51,7 +55,9 @@ php artisan craftable-pro:generate-permission-translations
 ```
 
 <Callout type="info">
-    If you are using pipelines for deployment, the recommended way is to run this command automatically within them. It can be called at any point after running the migrations.
+  If you are using pipelines for deployment, the recommended way is to run this
+  command automatically within them. It can be called at any point after running
+  the migrations.
 </Callout>
 
 Now you have all your permission strings available in the Translations manager (see [Translations](/basic-features/translations)).
