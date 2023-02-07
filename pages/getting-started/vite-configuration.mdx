@@ -13,9 +13,9 @@ Craftable PRO comes with two NPM scripts in `package.json` to build assets. Thos
 
 Craftable PRO needs three Vite aliases to work properly. These aliases are defined in the `craftable-pro.vite.config.js` file. Bellow is their explanation for better orientation:
 
--   `@` - pointing to resources folder in your project, where are located some of the components for better customizability. This alias is used by some of the Craftable PRO components, so please don't change it since it might break your layout.
--   `craftable-pro` - used to load all Craftable PRO components
--   `ziggy` - used to load helper functions from Ziggy to used named routes in your project
+- `@` - pointing to resources folder in your project, where are located some of the components for better customizability. This alias is used by some of the Craftable PRO components, so please don't change it since it might break your layout.
+- `craftable-pro` - used to load all Craftable PRO components
+- `ziggy` - used to load helper functions from Ziggy to used named routes in your project
 
 ## Combining Vite configs
 
@@ -29,15 +29,14 @@ To combine them, please follow steps bellow:
 
 Add path to `craftable-pro.tailwind.config.js` in the `resources/css/craftable-pro.css` file:
 
-```css filename="resources/css/craftable-pro.css" copy {6}
-@import "/node_modules/highlight.js/styles/atom-one-dark.css";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+```css filename="resources\css\craftable-pro.css" copy {3}
+@import "craftable-pro/../css/craftable-pro.css";
 
 @config "../../craftable-pro.tailwind.config.js";
 
-...
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 ```
 
 ### Add input files
@@ -45,21 +44,21 @@ Add path to `craftable-pro.tailwind.config.js` in the `resources/css/craftable-p
 Add these input files into your `vite.config.js` file:
 
 ```js filename="vite.config.js" copy {10-11}
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
+import { defineConfig } from "vite";
+import laravel from "laravel-vite-plugin";
 
 export default defineConfig({
-    plugins: [
-        laravel({
-            input: [
-                'resources/css/app.css',
-                'resources/js/app.js',
-                'resources/js/craftable-pro/index.ts',
-                'resources/css/craftable-pro.css',
-            ],
-            refresh: true,
-        }),
-    ],
+  plugins: [
+    laravel({
+      input: [
+        "resources/css/app.css",
+        "resources/js/app.js",
+        "resources/js/craftable-pro/index.ts",
+        "resources/css/craftable-pro.css",
+      ],
+      refresh: true,
+    }),
+  ],
 });
 ```
 
@@ -68,30 +67,30 @@ export default defineConfig({
 You may not need to add this plugin if you already have it in your `vite.config.js` file.
 
 ```js filename="vite.config.js" copy {3,16-23}
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
+import { defineConfig } from "vite";
+import laravel from "laravel-vite-plugin";
 import vue from "@vitejs/plugin-vue";
 
 export default defineConfig({
-    plugins: [
-        laravel({
-            input: [
-                'resources/css/app.css',
-                'resources/js/app.js',
-                'resources/js/craftable-pro/index.ts',
-                'resources/css/craftable-pro.css',
-            ],
-            refresh: true,
-        }),
-        vue({
-            template: {
-                transformAssetUrls: {
-                    base: null,
-                    includeAbsolute: false,
-                },
-            },
-        }),
-    ],
+  plugins: [
+    laravel({
+      input: [
+        "resources/css/app.css",
+        "resources/js/app.js",
+        "resources/js/craftable-pro/index.ts",
+        "resources/css/craftable-pro.css",
+      ],
+      refresh: true,
+    }),
+    vue({
+      template: {
+        transformAssetUrls: {
+          base: null,
+          includeAbsolute: false,
+        },
+      },
+    }),
+  ],
 });
 ```
 
@@ -100,38 +99,41 @@ export default defineConfig({
 Bear in mind that these aliases will be afterwards available in your `resources/js/app.js` as well.
 
 ```js filename="vite.config.js" copy {4,26-32}
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
+import { defineConfig } from "vite";
+import laravel from "laravel-vite-plugin";
 import vue from "@vitejs/plugin-vue";
 const path = require("path");
 
 export default defineConfig({
-    plugins: [
-        laravel({
-            input: [
-                'resources/css/app.css',
-                'resources/js/app.js',
-                'resources/js/craftable-pro/index.ts',
-                'resources/css/craftable-pro.css',
-            ],
-            refresh: true,
-        }),
-        vue({
-            template: {
-                transformAssetUrls: {
-                    base: null,
-                    includeAbsolute: false,
-                },
-            },
-        }),
-    ],
-    resolve: {
-        alias: {
-            "@": path.resolve(__dirname, "./resources/js"),
-            "craftable-pro": path.resolve(__dirname, "./vendor/brackets/craftable-pro/resources/js"),
-            "ziggy": path.resolve(__dirname, "./vendor/tightenco/ziggy"),
+  plugins: [
+    laravel({
+      input: [
+        "resources/css/app.css",
+        "resources/js/app.js",
+        "resources/js/craftable-pro/index.ts",
+        "resources/css/craftable-pro.css",
+      ],
+      refresh: true,
+    }),
+    vue({
+      template: {
+        transformAssetUrls: {
+          base: null,
+          includeAbsolute: false,
         },
+      },
+    }),
+  ],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./resources/js"),
+      "craftable-pro": path.resolve(
+        __dirname,
+        "./vendor/brackets/craftable-pro/resources/js"
+      ),
+      ziggy: path.resolve(__dirname, "./vendor/tightenco/ziggy"),
     },
+  },
 });
 ```
 
@@ -141,10 +143,10 @@ Create following file in the root of your project if it doesn't exist yet: `post
 
 ```js filename="postcss.config.js"
 module.exports = {
-    plugins: {
-        tailwindcss: {},
-        autoprefixer: {},
-    },
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
 };
 ```
 

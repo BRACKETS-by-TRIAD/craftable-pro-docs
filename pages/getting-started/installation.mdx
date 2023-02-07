@@ -6,15 +6,21 @@ Craftable PRO is a package for Laravel that can be installed on any existing Lar
 
 <div className="steps-container">
 
+### Buy license
+
+You can buy a license on our [Craftable PRO website](https://craftable.pro#pricing). Afterwards, you will receive an email with a license key which you will need to continue with the installation.
+
 ### Register the repository
 
-After obtaining a valid [Craftable PRO license](https://craftable.pro) you need to add our private repository to your composer.json:
+After obtaining a valid [Craftable PRO license](https://craftable.pro#pricing) you need to add our private repository to your composer.json:
 
 ```bash copy
 composer config repositories.craftable-pro composer https://packages.craftable.pro/
 ```
 
 ### Add the package
+
+Require the package with composer. You will be asked for username and password during the installation. Use your email address and the license key you received after purchasing the license. Alternatively you can create local or global `auth.json`` file with your credentials. You can find more information about this in the [Composer documentation](https://getcomposer.org/doc/articles/authentication-for-private-packages.md#authentication-in-auth-json-per-project).
 
 ```bash copy
 composer require brackets/craftable-pro
