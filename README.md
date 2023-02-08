@@ -2,6 +2,8 @@
 
 Craftable PRO is an admin panel for your Laravel project build with InertiaJS, Vue and TailwindCSS.
 
+![Craftable PRO demo](https://docs.craftable.pro/images/demo.png)
+
 ## Installation
 
 In order to install Craftable PRO you must first buy a license. After that you just follow very easy the installation instructions. See [the documentation](https://docs.craftable.pro/getting-started/installation) for more information.
