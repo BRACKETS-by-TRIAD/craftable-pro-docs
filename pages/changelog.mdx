@@ -1,6 +1,35 @@
 # Changelog
 
-All notable changes to Craftable-PRO will be documented on this page.
+All notable changes to Craftable PRO will be documented on this page.
+
+<div className="changelog-container">
+## v1.0.3 - 2023-02-10
+
+### What's Changed
+
+- Fix: prefix names of all Craftble PRO routes with `craftable-pro.`
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+- Edit all already generated Craftable PRO routes as seen on the example below
+  - add `->name('craftable-pro.')` to all Craftable PRO routes
+  - change middlewares on all Craftable PRO routes to `->middleware('craftable-pro-middlewares')`
+
+Example:
+
+```php {1}
+Route::prefix('admin')->middleware('craftable-pro-middlewares')->name('craftable-pro.')->group(function () {
+    Route::get('articles', [ArticleController::class, 'index'])->name('articles.index');
+    Route::get('articles/create', [ArticleController::class, 'create'])->name('articles.create');
+    Route::post('articles', [ArticleController::class, 'store'])->name('articles.store');
+    Route::get('articles/{article}', [ArticleController::class, 'show'])->name('articles.show');
+    Route::get('articles/edit/{article}', [ArticleController::class, 'edit'])->name('articles.edit');
+    Route::match(['put', 'patch'], 'articles/{article}', [ArticleController::class, 'update'])->name('articles.update');
+    Route::delete('articles/{article}', [ArticleController::class, 'destroy'])->name('articles.destroy');
+    Route::post('articles/bulk-destroy', [ArticleController::class, 'bulkDestroy'])->name('articles.bulk-destroy');
+});
+```
 
 ## v1.0.2 - 2023-02-10
 
@@ -10,6 +39,11 @@ All notable changes to Craftable-PRO will be documented on this page.
 - Fix: image collection option bug
 - Fix: generator related fixes
 
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+- Run `npm i @headlessui-float/vue` to install new npm dependency
+
 ## v1.0.1 - 2023-02-09
 
 ### What's Changed
@@ -17,6 +51,12 @@ All notable changes to Craftable-PRO will be documented on this page.
 - Fix: headings in export not translated
 - Fix: controller name causing error in 'route:list' command
 
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
 ## v1.0.0 - 2023-02-07
 
 ### 🎉 Initial release 🎉
+
+</div>
