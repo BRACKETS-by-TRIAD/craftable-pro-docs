@@ -13,13 +13,17 @@ const config: DocsThemeConfig = {
   footer: {
     text: (
       <span>
-        © {new Date().getFullYear()} Designed and crafted with all the love by <a href="https://meetbrackets.com/" target="_blank">BRACKETS</a>.
+        © {new Date().getFullYear()} Designed and crafted with all the love by{" "}
+        <a href="https://meetbrackets.com/" target="_blank">
+          BRACKETS
+        </a>
+        .
       </span>
     ),
   },
   useNextSeoProps() {
     return {
-      titleTemplate: "%s – Craftable PRO",
+      titleTemplate: "%s – Craftable PRO Documentation",
     };
   },
 

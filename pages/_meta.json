@@ -3,8 +3,12 @@
   "getting-started": "Getting Started",
   "basic-features": "Basic Features",
   "frontend": "Frontend Assets",
+  "changelog": {
+    "title": "Changelog",
+    "type": "page"
+  },
   "demo": {
-    "title": "Demo",
+    "title": "Demo ↗",
     "type": "page",
     "href": "https://demo.craftable.pro",
     "newWindow": true
