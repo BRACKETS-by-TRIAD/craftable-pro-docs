@@ -3,6 +3,18 @@
 All notable changes to Craftable PRO will be documented on this page.
 
 <div className="changelog-container">
+## v1.0.4 - 2023-02-13
+
+### What's Changed
+
+- Fix: generator generating wrong and incomplete TS definitions
+- Fix: prefix names of some Craftble PRO routes missed in the last release
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+- Edit all already generated Craftable PRO .vue files and change the import of `InertiaForm` type from `import { InertiaForm } from "@inertiajs/vue3";` to `import { InertiaForm } from "craftable-pro/types";`
+
 ## v1.0.3 - 2023-02-10
 
 ### What's Changed
