@@ -7,6 +7,12 @@
     "title": "Changelog",
     "type": "page"
   },
+  "buy": {
+    "title": "Pricing ↗",
+    "type": "page",
+    "href": "https://craftable.pro#pricing",
+    "newWindow": true
+  },
   "demo": {
     "title": "Demo ↗",
     "type": "page",
