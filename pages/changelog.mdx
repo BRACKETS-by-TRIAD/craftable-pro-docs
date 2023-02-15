@@ -16,7 +16,7 @@ All notable changes to Craftable PRO will be documented on this page.
 
 - Run `composer update` to update dependencies
 - If you have any multiword relation name in generated listing file, change the name from snake kebab to snake case (e.g. `article-categories` to `article_categories`)
-- If you have any Craftable PRO requests already generated, change their namespace from `App\Http\Requests\CraftablePro` to `App\Http\Requests\CraftablePro\<ModelName>` (e.g. `App\Http\Requests\CraftablePro\Article`). Don't forget to change the namespace in the controllers as well.
+- If you have any Craftable PRO requests already generated, check if their namespace is correct. Each request should have following namespace `App\Http\Requests\CraftablePro\<ModelName>`. If it's not liek that, please change their namespace from `App\Http\Requests\CraftablePro` to `App\Http\Requests\CraftablePro\<ModelName>` (e.g. `App\Http\Requests\CraftablePro\Article`). Don't forget to change the namespace in the controllers as well.
 
 ## v1.0.4 - 2023-02-13
 
@@ -40,11 +40,17 @@ All notable changes to Craftable PRO will be documented on this page.
 
 - Run `composer update` to update dependencies
 - Edit all already generated Craftable PRO routes as seen on the example below
-  - add `->name('craftable-pro.')` to all Craftable PRO routes
-  - modify all instances of `route` function in your generated Craftable PRO .vue files to include `craftable-pro.` prefix as well
-  - change middlewares on all Craftable PRO routes to `->middleware('craftable-pro-middlewares')`
+  - change middlewares on all Craftable PRO routes from `->middleware(['craftable-pro-middlewares', 'auth:craftable-pro'])` to`->middleware('craftable-pro-middlewares')`
+  - find all instances of `route` function with built-in Craftable PRO routes in your Sidebar.vue file. See the list bellow for all Craftable PRO routes and change them to include `craftable-pro.` prefix (note that `*` is a wildcard for all nested routes):
+    - `route('media.*')` -> `route('craftable-pro.media.*')`
+    - `route('craftable-pro-users.*')` -> `route('craftable-pro.craftable-pro-users.*')`
+    - `route('roles.*')` -> `route('craftable-pro.roles.*')`
+    - `route('translations.*')` -> `route('craftable-pro.translations.*')`
+    - `route('settings.*')` -> `route('craftable-pro.settings.*')`
+  - (optional) add `->name('craftable-pro.')` to all generated Craftable PRO routes
+  - (optional) modify all instances of `route` function in your generated Craftable PRO .vue files to include `craftable-pro.` prefix as well
 
-Example:
+Example of modified Craftable PRO routes:
 
 ```php {1}
 Route::prefix('admin')->middleware('craftable-pro-middlewares')->name('craftable-pro.')->group(function () {

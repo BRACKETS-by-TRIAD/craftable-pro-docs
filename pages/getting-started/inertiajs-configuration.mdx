@@ -84,9 +84,9 @@ class Kernel extends HttpKernel
 
 ### Update RouteServiceProvider.php
 
-Register this new middleware group in your RouteServiceProvider
+Register this new middleware group in your RouteServiceProvider. Place it before the `web` group to prevent any wildcard routes from matching before the Craftable PRO routes.
 
-```php filename="RouteServiceProvider.php" {17-18}
+```php filename="RouteServiceProvider.php" {14-15}
 class RouteServiceProvider extends ServiceProvider
 {
     ...
@@ -100,11 +100,11 @@ class RouteServiceProvider extends ServiceProvider
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
 
-            Route::middleware('web')
-                ->group(base_path('routes/web.php'));
-
             Route::middleware('craftable-pro')
                 ->group(base_path('routes/craftable-pro.php'));
+
+            Route::middleware('web')
+                ->group(base_path('routes/web.php'));
         });
     }
 }
