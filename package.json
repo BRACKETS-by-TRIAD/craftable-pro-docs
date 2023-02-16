@@ -21,6 +21,7 @@
   "dependencies": {
     "@heroicons/react": "^2.0.13",
     "next": "^13.0.6",
+    "next-plausible": "^3.7.2",
     "nextra": "2.0.1",
     "nextra-theme-docs": "2.0.1",
     "prettier": "^2.8.3",
