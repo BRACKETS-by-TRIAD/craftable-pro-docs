@@ -3,5 +3,6 @@
   "translations": "Translations",
   "roles-permissions": "Roles & Permissions",
   "settings": "Settings",
-  "media": "Media"
+  "media": "Media",
+  "crud-generator": "CRUD Generator"
 }
