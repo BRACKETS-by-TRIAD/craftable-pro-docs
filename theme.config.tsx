@@ -1,6 +1,7 @@
 import React from "react";
 import { DocsThemeConfig } from "nextra-theme-docs";
 import Logo from "./components/logo";
+import Script from "next/script";
 
 const config: DocsThemeConfig = {
   logo: <Logo />,
@@ -10,6 +11,14 @@ const config: DocsThemeConfig = {
     light: 240,
     dark: 190,
   },
+  head: (
+    <>
+      <Script
+        data-domain="docs.craftable.pro"
+        src="https://plausible.io/js/script.js"
+      />
+    </>
+  ),
   footer: {
     text: (
       <span>
