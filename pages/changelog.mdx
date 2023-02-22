@@ -3,12 +3,31 @@
 All notable changes to Craftable PRO will be documented on this page.
 
 <div className="changelog-container">
+## v1.1.2 - 2023-02-22
+
+### What's Changed
+
+- Fix: bug which prevented multiple edits on Manage permissions page
+- Fix: add missing page titles
+- Fix: generator will provide options to choose table name if there is none provided
+- Fix: generator should detect existing eloquent model and if present it should ask if it should be overwritten
+- Fix: make translations scanner case sensitive in default Laravel installation with MySQL
+- Fix: resend invitation error
+- Fix: check permissions on translations edit button
+- Fix: add baseUrl as computed for filters and listing
+- Fix: change generated export name
+- Other small tweaks and fixes
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
 ## v1.1.1 - 2023-02-15
 
 ### What's Changed
 
 - Fix: compatibility issues with latest InertiaJS release
-- Fix: add custom guest middleware to prevent redirects to `/home`` for authenticated users
+- Fix: add custom guest middleware to prevent redirects to `/home` for authenticated users
 
 ### Upgrade Guide
 
@@ -26,8 +45,8 @@ All notable changes to Craftable PRO will be documented on this page.
 ### Upgrade Guide
 
 - Run `composer update` to update dependencies
-- If you have any multiword relation name in generated listing file, change the name from snake kebab to snake case (e.g. `article-categories` to `article_categories`)
-- If you have any Craftable PRO requests already generated, check if their namespace is correct. Each request should have following namespace `App\Http\Requests\CraftablePro\<ModelName>`. If it's not liek that, please change their namespace from `App\Http\Requests\CraftablePro` to `App\Http\Requests\CraftablePro\<ModelName>` (e.g. `App\Http\Requests\CraftablePro\Article`). Don't forget to change the namespace in the controllers as well.
+- If you have any multiword relation name in generated listing file, change the name from kebab to snake case (e.g. `article-categories` to `article_categories`)
+- If you have any Craftable PRO requests already generated, check if their namespace is correct. Each request should have following namespace `App\Http\Requests\CraftablePro\<ModelName>`. If it's not like that, please change their namespace from `App\Http\Requests\CraftablePro` to `App\Http\Requests\CraftablePro\<ModelName>` (e.g. `App\Http\Requests\CraftablePro\Article`). Don't forget to change the namespace in the controllers as well.
 
 ## v1.0.4 - 2023-02-13
 
