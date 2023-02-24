@@ -26,7 +26,16 @@ const config: DocsThemeConfig = {
       titleTemplate: "%s – Craftable PRO Documentation",
     };
   },
-
+  head: (
+    <>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta property="og:title" content="Craftable PRO Docs" />
+      <meta
+        property="og:description"
+        content="Documentation for Craftable PRO"
+      />
+    </>
+  ),
   chat: {
     link: "https://twitter.com/craftable_pro",
     icon: (
