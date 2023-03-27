@@ -1,0 +1,24 @@
+# Wysiwyg
+
+## Basic example
+
+```vue
+<template>
+  <Wysiwyg v-model="value" />
+</template>
+<script>
+import { ref } from "vue";
+import { Wysiwyg } from "craftable-pro/Components";
+
+const value = ref("");
+</script>
+```
+
+## Props
+
+| Prop name      | Required | Type    | Default value | Description                           |
+| -------------- | -------- | ------- | ------------- | ------------------------------------- |
+| name           | Yes      | String  |               | The name of the input                 |
+| modelValue     | Yes      | string  |               | The model value of the input          |
+| label          | No       | String  |               | The label to display above the input  |
+| withoutToolbar | No       | Boolean | false         | Whether or not to display the toolbar |

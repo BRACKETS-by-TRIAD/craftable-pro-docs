@@ -1,0 +1,38 @@
+# RadioGroup
+
+## Basic example
+
+```vue
+<template>
+  <RadioGroup v-model="value" />
+</template>
+<script>
+import { ref } from "vue";
+import { RadioGroup } from "craftable-pro/Components";
+
+const value = ref("");
+const options = ref([
+  {
+    label: "Option 1",
+    value: "option-1",
+  },
+  {
+    label: "Option 2",
+    value: "option-2",
+  },
+  {
+    label: "Option 3",
+    value: "option-3",
+  },
+]);
+</script>
+```
+
+## Props
+
+| Name       | Required | Type                                              | Default Value | Description                                 |
+| ---------- | -------- | ------------------------------------------------- | ------------- | ------------------------------------------- |
+| name       | Yes      | string                                            |               | Name of the input element                   |
+| options    | Yes      | Array<{ value: string \| number, label: string }> |               | Array of options for the radio button group |
+| label      | No       | string                                            |               | Label for the input element                 |
+| modelValue | No       | string                                            |               | Model value for v-model binding             |

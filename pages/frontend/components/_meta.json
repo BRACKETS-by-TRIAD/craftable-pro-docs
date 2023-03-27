@@ -1,0 +1,14 @@
+{
+  "button": "Button",
+  "button-group": "ButtonGroup",
+  "icon-button": "IconButton",
+  "text-input": "TextInput",
+  "text-area": "TextArea",
+  "checkbox": "Checkbox",
+  "toggle": "Toggle",
+  "radio-group": "RadioGroup",
+  "date-picker": "DatePicker",
+  "select-input": "SelectInput",
+  "multiselect": "Multiselect",
+  "wysiwyg": "Wysiwyg"
+}
