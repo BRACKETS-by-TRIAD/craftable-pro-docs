@@ -1,0 +1,26 @@
+# Checkbox
+
+## Basic example
+
+```vue
+<template>
+  <Checkbox v-model="value" />
+</template>
+<script>
+import { ref } from "vue";
+import { Checkbox } from "craftable-pro/Components";
+
+const value = ref("");
+</script>
+```
+
+## Props
+
+| Name          | Type                                 | Default Value |
+| ------------- | ------------------------------------ | ------------- |
+| name          | String                               |               |
+| label         | String                               |               |
+| inputValue    | String \| Number                     |               |
+| checked       | Boolean                              | false         |
+| indeterminate | Boolean                              | false         |
+| modelValue    | Boolean \| Array\<String \| Number\> |               |

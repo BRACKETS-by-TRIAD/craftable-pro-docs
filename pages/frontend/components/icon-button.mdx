@@ -1,0 +1,31 @@
+# IconButton
+
+## Basic example
+
+```vue
+<template>
+  <IconButton :icon="ExclamationCircleIcon" />
+</template>
+<script>
+import { ExclamationCircleIcon } from "@heroicons/vue/20/solid";
+import { IconButton } from "craftable-pro/Components";
+</script>
+```
+
+## Props
+
+| Name           | Required | Type                          | Default Value | Description                                 |
+| -------------- | -------- | ----------------------------- | ------------- | ------------------------------------------- |
+| icon           | Yes      | Component                     |               | The component to be rendered as an icon.    |
+| rounded        | No       | Boolean                       | false         | Whether the button should be rounded.       |
+| type           | No       | ButtonType                    | button        | The type of the button.                     |
+| color          | No       | ButtonColor                   |               | The color of the button.                    |
+| variant        | No       | ButtonVariant                 |               | The variant of the button.                  |
+| size           | No       | SizesType                     | md            | The size of the button.                     |
+| disabled       | No       | Boolean                       | false         | Whether the button should be disabled.      |
+| as             | No       | String \| Component \| Object | button        | The type of the element to render.          |
+| download       | No       | String                        |               | The download attribute of the button.       |
+| href           | No       | String                        |               | The href attribute of the button.           |
+| only           | No       | Array                         |               | The only attribute of the button.           |
+| preserveScroll | No       | Boolean                       |               | The preserveScroll attribute of the button. |
+| preserveState  | No       | Boolean                       |               | The preserveState attribute of the button.  |

@@ -1,0 +1,30 @@
+# TextArea
+
+## Basic example
+
+```vue
+<template>
+  <TextArea v-model="value" />
+</template>
+<script>
+import { ref } from "vue";
+import { TextArea } from "craftable-pro/Components";
+
+const value = ref("");
+</script>
+```
+
+## Props
+
+| Name               | Required | Type            | Default value | Description                               |
+| ------------------ | -------- | --------------- | ------------- | ----------------------------------------- |
+| modelValue         | Yes      | string          | ""            | The v-model value of TextInput            |
+| name               | Yes      | string          | ""            | The name of input                         |
+| autocomplete       | No       | string          |               | The HTML autocomplete attribute           |
+| required           | No       | boolean         |               | The HTML required attribute               |
+| label              | No       | string          |               | The label for input                       |
+| labelPosition      | No       | "top" \| "left" | "top"         | The label position for input              |
+| placeholder        | No       | string          |               | The placeholder of input                  |
+| disabled           | No       | boolean         | false         | The disabled state of input.              |
+| maxCharactersCount | No       | number          | -             | The number of maximum allowed characters. |
+| rows               | No       | number          | 5             | The number of rows of textarea.           |

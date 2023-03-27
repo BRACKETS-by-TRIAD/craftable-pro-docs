@@ -1,0 +1,24 @@
+# Toggle
+
+## Basic example
+
+```vue
+<template>
+  <Toggle v-model="value" />
+</template>
+<script>
+import { ref } from "vue";
+import { Toggle } from "craftable-pro/Components";
+
+const value = ref("");
+</script>
+```
+
+## Props
+
+| Name       | Required | Type    | Default Value | Description                         |
+| ---------- | -------- | ------- | ------------- | ----------------------------------- |
+| name       | Yes      | String  |               | Name of the input element           |
+| withIcon   | No       | Boolean | false         | Whether to show check or cross icon |
+| modelValue | No       | Boolean | false         | Model value of the toggle           |
+| label      | No       | String  |               | Text to display next to the toggle  |

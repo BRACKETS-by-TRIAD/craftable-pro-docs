@@ -1,0 +1,31 @@
+# DatePicker
+
+## Basic example
+
+```vue
+<template>
+  <DatePicker v-model="value" />
+</template>
+<script>
+import { ref } from "vue";
+import { DatePicker } from "craftable-pro/Components";
+
+const value = ref("");
+</script>
+```
+
+## Props
+
+| Name           | Required | Type              | Default Value      | Description                                                     |
+| -------------- | -------- | ----------------- | ------------------ | --------------------------------------------------------------- |
+| label          | No       | `string`          |                    | The label for the date picker input.                            |
+| name           | Yes      | `string`          |                    | The name attribute of the date picker input.                    |
+| placeholder    | No       | `string`          |                    | The placeholder text for the date picker input.                 |
+| rules          | No       | `string`          |                    | Validation rules for the date picker input.                     |
+| required       | No       | `boolean`         | No                 | Whether the date picker input is required or not.               |
+| disabled       | No       | `boolean`         | No                 | Whether the date picker input is disabled or not.               |
+| mode           | No       | `DatePickerMode`  | `"date"`           | The mode of the date picker input. Can be "date" or "datetime". |
+| onBlur         | No       | `Function`        |                    | A function to call when the date picker input loses focus.      |
+| modelValue     | Yes      | `Date \| string`  |                    | The current value of the date picker input.                     |
+| labelPlacement | No       | `"top" \| "left"` | `"top"`            | The placement of the label for the date picker input.           |
+| labelPlacement | No       | `Component`       | `CalendarDaysIcon` | The left icon of the date picker input.                         |

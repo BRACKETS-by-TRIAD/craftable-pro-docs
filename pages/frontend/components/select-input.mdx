@@ -1,0 +1,37 @@
+# SelectInput
+
+## Basic example
+
+```vue
+<template>
+  <SelectInput v-model="value" :options="options" />
+</template>
+<script>
+import { ref } from "vue";
+import { SelectInput } from "craftable-pro/Components";
+
+const value = ref("");
+const options = ref([
+  "Option 1",
+  "Option 2",
+  "Option 3",
+  "Option 4",
+  "Option 5",
+]);
+</script>
+```
+
+## Props
+
+| Name           | Required | Type                 | Default Value | Description                    |
+| -------------- | -------- | -------------------- | ------------- | ------------------------------ |
+| name           | Yes      | string               |               | The name of the input          |
+| label          | No       | string               |               | The label of the input         |
+| error          | No       | string               |               | The error message of the input |
+| labelPlacement | No       | string               | top           | The placement of the label     |
+| disabled       | No       | boolean              | false         | Whether the input is disabled  |
+| placeholder    | No       | string               |               | The placeholder of the input   |
+| inputClass     | No       | string               |               | The class of the input         |
+| modelValue     | No       | string or number     |               | The value of the input         |
+| size           | No       | SizesType            | md            | The size of the input          |
+| options        | Yes      | number[] or string[] |               | The options of the input       |

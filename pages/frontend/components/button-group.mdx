@@ -1,0 +1,27 @@
+# ButtonGroup
+
+## Basic example
+
+```vue
+<template>
+  <ButtonGroup>
+    <Button>Button 1</Button>
+    <Button>Button 2</Button>
+    <Button>Button 3</Button>
+  </ButtonGroup>
+</template>
+<script>
+import { ref } from "vue";
+import { ButtonGroup, Button } from "craftable-pro/Components";
+
+const value = ref("");
+</script>
+```
+
+## Props
+
+| Prop    | Type                                                                               | Default | Description                                   |
+| ------- | ---------------------------------------------------------------------------------- | ------- | --------------------------------------------- |
+| color   | "primary" \| "secondary" \| "gray" \| "success" \| "info" \| "warning" \| "danger" | primary | Sets the color of the buttons in the group.   |
+| variant | "solid" \| "outline" \| "ghost" \| "link"                                          | solid   | Sets the variant of the buttons in the group. |
+| size    | "xs" \| "sm" \| "md" \| "lg" \| "xl"                                               | md      | Sets the size of the buttons in the group.    |

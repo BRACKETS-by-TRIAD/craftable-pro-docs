@@ -1,0 +1,51 @@
+# Multiselect
+
+## Basic example
+
+```vue
+<template>
+  <Multiselect v-model="form.role_id" :options="options" />
+</template>
+<script>
+import { ref } from "vue";
+import { Multiselect } from "craftable-pro/Components";
+
+const value = ref([]);
+const options = ref([
+  "Option 1",
+  "Option 2",
+  "Option 3",
+  "Option 4",
+  "Option 5",
+]);
+</script>
+```
+
+## Props
+
+| Name             | Required | Type                                | Default Value | Description                                 |
+| ---------------- | -------- | ----------------------------------- | ------------- | ------------------------------------------- |
+| name             | Yes      | string                              |               | The name of the input                       |
+| label            | No       | string                              |               | The label of the input                      |
+| placeholder      | No       | string                              |               | The placeholder of the input                |
+| required         | No       | boolean                             | false         | Whether the input is required or not        |
+| disabled         | No       | boolean                             | false         | Whether the input is disabled or not        |
+| options          | Yes      | any[]                               |               | The options for the input                   |
+| searchable       | No       | boolean                             | true          | Whether the input is searchable or not      |
+| optionsLabel     | No       | string                              | "label"       | The label of the options                    |
+| optionsValueProp | No       | string                              | "value"       | The value of the options                    |
+| optionsTrackBy   | No       | string                              |               | The track by of the options                 |
+| hideSelected     | No       | boolean                             | false         | Whether to hide the selected options or not |
+| mode             | No       | "tags" \| "single" \| "multiple"    | "multiple"    | The mode of the input                       |
+| limit            | No       | number                              |               | The limit of the input                      |
+| onChange         | No       | (value: any) => void                |               | The callback when the value changes         |
+| handleTagCreate  | No       | (option: any, select$: any) => void |               | The callback when a tag is created          |
+| modelValue       | No       | any                                 |               | The model value                             |
+| createOption     | No       | boolean                             | false         | Whether to create an option or not          |
+| object           | No       | boolean                             | false         | Whether the input is an object or not       |
+| resolveOnLoad    | No       | boolean                             | true          | Whether to resolve on load or not           |
+| canDeselect      | No       | boolean                             |               | Whether to allow deselecting or not         |
+| canClear         | No       | boolean                             |               | Whether to allow clearing or not            |
+| labelPlacement   | No       | "top" \| "left"                     | "top"         | The placement of the label                  |
+| inputClass       | No       | string                              | ""            | The class of the input                      |
+| leftIcon         | No       | Component                           |               | The left icon of the input                  |

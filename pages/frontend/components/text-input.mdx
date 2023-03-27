@@ -1,0 +1,36 @@
+# TextInput
+
+## Basic example
+
+```vue
+<template>
+  <TextInput v-model="value" />
+</template>
+<script>
+import { ref } from "vue";
+import { TextInput } from "craftable-pro/Components";
+
+const value = ref("");
+</script>
+```
+
+## Props
+
+| Name               | Required | Type                                 | Default value | Description                                                                                       |
+| ------------------ | -------- | ------------------------------------ | ------------- | ------------------------------------------------------------------------------------------------- |
+| modelValue         | Yes      | string                               |               | The v-model value of TextInput                                                                    |
+| name               | Yes      | string                               |               | The name of input                                                                                 |
+| type               | No       | string                               | "text"        | The HTML type attribute. When set to "password", component will allow to toggle value visibility. |
+| autocomplete       | No       | string                               |               | The HTML autocomplete attribute                                                                   |
+| required           | No       | boolean                              |               | The HTML required attribute                                                                       |
+| placeholder        | No       | string                               |               | The placeholder of input                                                                          |
+| label              | No       | string                               |               | The label for input                                                                               |
+| labelPosition      | No       | "top" \| "left"                      | "top"         | The label position for input                                                                      |
+| disabled           | No       | boolean                              | false         | The disabled state of input.                                                                      |
+| clearable          | No       | boolean                              | false         | Wheather or not to show clear button.                                                             |
+| maxCharactersCount | No       | number                               |               | The number of maximum allowed characters.                                                         |
+| size               | No       | "xs" \| "sm" \| "md" \| "lg" \| "xl" | "md"          | The size of input.                                                                                |
+| leftIcon           | No       | Component                            |               | The left icon of input.                                                                           |
+| rightIcon          | No       | Component                            |               | The right icon of input.                                                                          |
+| leadingAddon       | No       | string                               |               | The leading addon of input.                                                                       |
+| trailingAddon      | No       | string                               |               | The trailing addon of input.                                                                      |
