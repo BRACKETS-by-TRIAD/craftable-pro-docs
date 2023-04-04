@@ -11,7 +11,7 @@ In this documentation I will use the `Article` model as an example and I will im
 
 ### Edit your controller
 
-First we need to edit generated controller for our model and add columns we want to filter by into the query builder using the `allowedFilters` method. You can learn more about the query builder in the [Spatie's documentation](https://spatie.be/index.php/docs/laravel-query-builder/v5/features/filtering).
+First we need to edit generated controller for our model and add columns we want to filter by into the query builder using the `allowedFilters` method. You can learn more about the query builder in the [Spatie's Query Builder documentation](https://spatie.be/index.php/docs/laravel-query-builder/v5/features/filtering).
 I will also include all authors in the Inertia response so we can use them in the Multiselect component later. All together it will look like this:
 
 ```php filename="app/Http/Controllers/CraftablePro/Article/ArticleController.php" {10-11, 27}
@@ -46,6 +46,15 @@ public function index(IndexArticlesRequest $request)
 }
 ```
 
+<Callout>
+  You can define filters simply by passing the column name to the
+  `allowedFilters` method, but in this case we want to use exact match for the
+  `author_id` column and we want to use custom callback for the `published_at`
+  column so we can filter by date, without taking time into the account. You can
+  learn more about all the options in the [Spatie's Query Builder
+  documentation](https://spatie.be/index.php/docs/laravel-query-builder/v5/features/filtering).
+</Callout>
+
 ### Import useListingFilters hook
 
 Next we need to edit generated Vue component for listing. In our case it is located in `resources/js/craftable-pro/Pages/Article/Index.vue`.
@@ -73,6 +82,14 @@ const { filtersForm, resetFilters, activeFiltersCount } = useListingFilters(
 );
 </script>
 ```
+
+<Callout>
+  `filter` in `usePage().props.filter` is default key in the page props that is
+  used to pass filters to the listing. You can change this key by customizing
+  the HandleInertiaMiddleware. See the [InertiaJS configuration
+  page](https://docs.craftable.pro/getting-started/inertiajs-configuration#middleware)
+  for more details.
+</Callout>
 
 ### Import FiltersDropdown component
 
