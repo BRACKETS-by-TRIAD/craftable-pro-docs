@@ -29,14 +29,14 @@ const config: DocsThemeConfig = {
   head: (
     <>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <meta property="og:title" content="Craftable PRO Docs" />
+      <meta property="og:title" content="Craftable PRO Documentation" />
       <meta
         property="og:description"
-        content="Documentation for Craftable PRO"
+        content="Craftable PRO is beautiful admin panel, CRM or CMS for your Laravel project build with InertiaJS, Vue and TailwindCSS."
       />
     </>
   ),
-  chat: {
+  project: {
     link: "https://twitter.com/craftable_pro",
     icon: (
       <svg width="24" height="24" viewBox="0 0 512 512">
@@ -46,6 +46,9 @@ const config: DocsThemeConfig = {
         />
       </svg>
     ),
+  },
+  chat: {
+    link: "https://discord.gg/jYbJweha",
   },
 };
 
