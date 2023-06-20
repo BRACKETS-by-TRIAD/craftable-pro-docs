@@ -12,16 +12,15 @@ All notable changes to Craftable PRO will be documented on this page.
 - Feat: generator should support also adding relations to CraftablePRO models
 - Feat: add support boolean column, update Toggle component
 - Fix: generator belongs to many
-- Fix: add Vite 4.0 support
+- Fix: add ES module support
 - Fix: added right padding for tags, to prevent overflow
 
 ### Upgrade Guide
 
 - Run `composer update` to update dependencies
-- Remove `craftable-pro.vite.config.js`
-- Run `php artisan craftable-pro:install` to publish new config into your project
-- Alternatively, just make sure your Vite config looks like [this](/getting-started/vite-configuration#alternatively-use-inline-postcss-configuration)
-- Make sure you have `@formkit/auto-animate` in your package.json with the version `0.7.0` or higher
+- If you have `"type": "module"` in your package.json (this apply for Laravel projects newer than `v10.2.0`), please follow the steps bellow to upgrade. Otherwise, you can skip these steps.
+  - Make sure you don't have any `require` in your `craftable-pro.vite.config.js`, if so, please take a look on the Vite config [here](/getting-started/vite-configuration#alternatively-use-inline-postcss-configuration), and change yours accordingly
+  - Make sure you have `@formkit/auto-animate` in your package.json with the version `0.7.0` or higher
 
 ## v1.1.13 - 2023-05-25
 
