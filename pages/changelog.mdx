@@ -4,6 +4,87 @@ All notable changes to Craftable PRO will be documented on this page.
 
 <div className="changelog-container">
 
+## v1.1.14 - 2023-06-20
+
+### What's Changed
+
+- Feat: ship with translations for permissions and make generator generates default translations for permissions
+- Feat: generator should support also adding relations to CraftablePRO models
+- Feat: add support boolean column, update Toggle component
+- Fix: generator belongs to many
+- Fix: add Vite 4.0 support
+- Fix: added right padding for tags, to prevent overflow
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+- Remove `craftable-pro.vite.config.js`
+- Run `php artisan craftable-pro:install` to publish new config into your project
+- Alternatively, just make sure your Vite config looks like [this](/getting-started/vite-configuration#alternatively-use-inline-postcss-configuration)
+- Make sure you have `@formkit/auto-animate` in your package.json with the version `0.7.0` or higher
+
+## v1.1.13 - 2023-05-25
+
+### What's Changed
+
+- Fix: Dropzone components update
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.12 - 2023-05-25
+
+### What's Changed
+
+- Fix: add timestamps options to listing generator
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.11 - 2023-05-22
+
+### What's Changed
+
+- Fix: modify styles to work better on mobile devices
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.10 - 2023-04-28
+
+### What's Changed
+
+- Feat: added 'size' prop to 'Publish' component
+- Fix: multiwords table names
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.9 - 2023-04-26
+
+### What's Changed
+
+- Fix: PHPArrayScanner to only scan .php files
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.8 - 2023-04-20
+
+### What's Changed
+
+- Feat: add new DateRangePicker componnet
+- Fix: use customised Logo in Auth layout
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
 ## v1.1.7 - 2023-04-13
 
 ### What's Changed
