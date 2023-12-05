@@ -31,7 +31,11 @@ To enable social login in your application, follow these simple steps:
         ]
     ]
 ```
-### If you enable social login self-registration, don't forget to also check the `allowed_domains`.
+### Social login self-registration
+When social login self-registration is enabled, users can register conveniently through various social logins. However, if disabled, users will only gain access to social login after a CraftableProUser instance has been generated for them in the Access tab.
+
+To permit registration for emails from any domain, adjust the configuration to `'allowed_domains' => ['*']`.
+To allow registration only for emails from a specific domain (e.g., @mydomain.com), modify the configuration to `'allowed_domains' => ['mydomain.com'].`"
 ### Register event listeners for your enabled providers in `app/Providers/EventServiceProvider.php`:
 ```text filename="app/Providers/EventServiceProvider.php"
 protected $listen = [
@@ -78,3 +82,14 @@ APPLE_REDIRECT_URI="/admin/login/apple/callback"
 To use another existing provider, check out the [Laravel Socialite](https://laravel.com/docs/socialite) or [Laravel Socialite Providers](https://socialiteproviders.com/) documentation.
 
 To create a new custom provider, follow the steps outlined [here](https://socialiteproviders.com/contribute/#creating-a-provider).
+To enable your new provider in Craftable Pro, don't forget to add it to the config:
+```php filename="config/craftable-pro.php"
+   'social_login' => [
+        'allowed_services' => [
+            'myNewProvider' => true
+            ...
+        ],
+        ...
+    ]
+```
+as well as to implement a login button for it on the login page.
