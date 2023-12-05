@@ -9,7 +9,8 @@ The functionality is powered by the [Laravel Socialite](https://laravel.com/docs
 
 To enable social login in your application, follow these simple steps:
 
-1. Select which services you want to use and enable them in `config/craftable-pro.php`:
+<div className="steps-container">
+### Select which services you want to use and enable them in `config/craftable-pro.php`:
 ```php filename="config/craftable-pro.php"
    'social_login' => [
         'allowed_services' => [
@@ -30,8 +31,8 @@ To enable social login in your application, follow these simple steps:
         ]
     ]
 ```
-2. If you enable social login self-registration, don't forget to also check the `allowed_domains`.
-3. Register event listeners for your enabled providers in `app/Providers/EventServiceProvider.php`:
+### If you enable social login self-registration, don't forget to also check the `allowed_domains`.
+### Register event listeners for your enabled providers in `app/Providers/EventServiceProvider.php`:
 ```text filename="app/Providers/EventServiceProvider.php"
 protected $listen = [
     \SocialiteProviders\Manager\SocialiteWasCalled::class => [
@@ -44,7 +45,7 @@ protected $listen = [
     ]
 ];
 ```
-4. Get client credentials from the providers and put them in your `.env`:
+### Get client credentials from the providers and put them in your `.env`:
 ```php filename=".env"
 MICROSOFT_CLIENT_ID=
 MICROSOFT_CLIENT_SECRET=
@@ -70,3 +71,10 @@ APPLE_CLIENT_ID=
 APPLE_CLIENT_SECRET=
 APPLE_REDIRECT_URI="/admin/login/apple/callback"
 ```
+</div>
+
+## Other providers
+
+To use another existing provider, check out the [Laravel Socialite](https://laravel.com/docs/socialite) or [Laravel Socialite Providers](https://socialiteproviders.com/) documentation.
+
+To create a new custom provider, follow the steps outlined [here](https://socialiteproviders.com/contribute/#creating-a-provider).
