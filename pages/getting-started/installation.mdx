@@ -1,4 +1,4 @@
-import { Callout, Tab, Tabs } from "nextra-theme-docs";
+import { Callout, Tab, Tabs } from 'nextra-theme-docs';
 
 # Installation
 
@@ -39,26 +39,56 @@ php artisan craftable-pro:install
 
 You can use whatever package manager you preffer, but we will use `npm` in this example.
 
-```bash copy
+{/* prettier-ignore */}
+<Tabs items={["npm", "yarn"]}>
+  <Tab>
+  ```bash copy
 npm install
 ```
+  </Tab>
+  <Tab>
+  ```bash copy
+yarn install
+```
+  </Tab>
+</Tabs>
 
 Afterwards you can start Vite with:
 
-```bash copy
+{/* prettier-ignore */}
+<Tabs items={["npm", "yarn"]}>
+  <Tab>
+  ```bash copy
 npm run craftable-pro:dev
 ```
+  </Tab>
+  <Tab>
+  ```bash copy
+yarn craftable-pro:dev
+```
+  </Tab>
+</Tabs>
 
 Or you can build the assets for production with:
 
-```bash copy
+{/* prettier-ignore */}
+<Tabs items={["npm", "yarn"]}>
+  <Tab>
+  ```bash copy
 npm run craftable-pro:build
 ```
+  </Tab>
+  <Tab>
+  ```bash copy
+yarn craftable-pro:build
+```
+  </Tab>
+</Tabs>
 
 <Callout>
-  Note that if you use InertiaJS in your project, we recommend you to [merge
-  Vite configs](/getting-started/vite-configuration#combining-vite-configs). We
-  also recommend to [separate Craftable PRO
+  Note that if you use InertiaJS in your project, we recommend you to [merge Vite
+  configs](/getting-started/vite-configuration#combining-vite-configs). We also recommend
+  to [separate Craftable PRO
   routes](/getting-started/inertiajs-configuration#using-inertiajs-outside-craftable-pro)
   from your application routes to isolate InertiaJS middlewares.
 </Callout>
