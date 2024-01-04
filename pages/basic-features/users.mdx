@@ -7,21 +7,7 @@ Craftable PRO comes with CRUD for users where you can manage who has the access 
 
 ## Self-registration
 
-<br />
-<Image alt="Registration" src="/images/register.png" />
-
-You can enable self-registration by editing the Craftable PRO config and setting `enabled` in `self_registration` to `true`. You can also set the default role for newly registered users. This is discussed more in the section [Roles & Permissions](/basic-features/roles-permissions#default-role-after-registration).
-
-```php filename="config/craftable-pro.php"
- 'self_registration' => [
-        // define if users can self register into craftable pro interface
-        'enabled' => true,
-
-        // and if enabled, then which role(s) they should have assigned by default. Use role names here.
-        // It can be a string for one role or an array for multiple roles.
-        'default_role' => 'Guest',
-    ],
-```
+To read about self registration, head to [Traditional Login](/basic-features/authentication#traditional-login) page.
 
 ## Verification
 
