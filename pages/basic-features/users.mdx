@@ -10,7 +10,11 @@ Craftable PRO comes with CRUD for users where you can manage who has the access 
 <br />
 <Image alt="Registration" src="/images/register.png" />
 
-You can enable self-registration by editing the Craftable PRO config and setting `enabled` in `self_registration` to `true`. You can also set the default role for newly registered users. This is discussed more in the section [Roles & Permissions](/basic-features/roles-permissions#default-role-after-registration).
+You can enable self-registration by editing the Craftable PRO config and setting `enabled` in `self_registration` to `true`.
+
+You can also set the default role for newly registered users. This is discussed more in the section [Roles & Permissions](/basic-features/roles-permissions#default-role-after-registration).
+
+To whitelist the email domains allowed for newly registered users, edit the `allowed_domains` setting. To allow any domain, set it to `['*']`.
 
 ```php filename="config/craftable-pro.php"
  'self_registration' => [
@@ -20,6 +24,8 @@ You can enable self-registration by editing the Craftable PRO config and setting
         // and if enabled, then which role(s) they should have assigned by default. Use role names here.
         // It can be a string for one role or an array for multiple roles.
         'default_role' => 'Guest',
+
+        'allowed_domains' => [] // use * for allowing any domain
     ],
 ```
 
