@@ -18,7 +18,10 @@ All notable changes to Craftable PRO will be documented on this page.
 
 ### Upgrade Guide
 
+- [Install](https://www.php.net/manual/en/sodium.installation.php) Sodium extension for PHP if you don't have it already
 - Run `composer update` to update dependencies
+- Run `php artisan vendor:publish --tag=craftable-pro-migrations` to publish new role permissions migration
+- Run `php artisan migrate` to migrate new role permissions
 
 ## v1.1.21 - 2023-10-24
 
