@@ -48,3 +48,57 @@ You can delete a user by selecting "Access" from the menu and choosing "Delete" 
   created (via registration, invitation or even manually) again with the same
   e-mail address even though he/she is currently soft deleted.
 </Callout>
+
+## Digging deeper
+
+### Custom user model
+
+You can use your own user model by setting `craftable_pro_user_model` in Craftable PRO config file. The model has to extend `Brackets\CraftablePro\Models\BaseCraftableProUser` class.
+
+<div className="steps-container">
+
+### Create new extending model, e.g.:
+
+```php
+namespace App\Models;
+
+use Brackets\CraftablePro\Models\BaseCraftableProUser;
+
+class MyCraftableProUser extends BaseCraftableProUser
+{
+    protected $table = 'craftable_pro_users';
+    protected $guard = 'craftable-pro';
+
+    protected $appends = ['resource_url', 'avatar', 'avatar_url', 'media_details', 'has_enabled_two_factor_authentication', 'full_name'];
+
+    public function getFullNameAttribute(): string
+    {
+        return $this->first_name . " " . $this->last_name;
+    }
+}
+```
+
+### In config/craftable-pro.php set the new model:
+```php filename="config/craftable-pro.php"
+'craftable_pro_user_model' => App\Models\MyCraftableProUser::class,
+```
+
+### In config/auth.php set the new model in providers
+```php filename="config/auth.php"
+use App\Models\MyCraftableProUser;
+
+'providers' => [
+        'craftable-pro-users' => [
+            'driver' => 'eloquent',
+            'model' => MyCraftableProUser::class,
+        ],
+],
+'guards' => [
+        'craftable-pro' => [
+            'driver' => 'session',
+            'provider' => 'craftable-pro-users',
+        ],
+ ],
+```
+
+</div>
