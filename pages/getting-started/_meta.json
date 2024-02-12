@@ -1,5 +1,6 @@
 {
   "installation": "Installation",
+  "upgrade-guide": "Upgrade Guide",
   "directory-structure": "Directory Structure",
   "config-file": "Configuration",
   "inertiajs-configuration": "InertiaJS Configuration",

@@ -1,0 +1,99 @@
+import { Callout, Tab, Tabs } from 'nextra-theme-docs';
+
+# Upgrading from v1.x
+Follow these steps to upgrade your Craftable PRO installation to v2:
+
+<div className="steps-container">
+
+### Publish Migrations, Assets, and JS Stubs
+
+Execute the following commands in your terminal to publish migrations, public assets, and JavaScript stubs required for Craftable PRO:
+```bash copy
+php artisan vendor:publish --provider="Brackets\CraftablePro\CraftableProServiceProvider" --tag="craftable-pro-migrations"
+php artisan vendor:publish --provider="Brackets\CraftablePro\CraftableProServiceProvider" --tag="craftable-pro-public"
+php artisan vendor:publish --provider="Brackets\CraftablePro\CraftableProServiceProvider" --tag="craftable-pro-js-stubs"
+```
+
+Don't forget to run the migrations after publishing them:
+```bash copy
+php artisan migrate
+```
+
+### Add newly required npm dependency
+
+Next, you need to add the vue-slicksort package, which is a dependency for some of the draggable functionalities in Craftable PRO's Vue components. Run the following npm command:
+{/* prettier-ignore */}
+<Tabs items={["npm", "yarn"]}>
+  <Tab>
+  ```bash copy
+npm install vue-slicksort
+```
+  </Tab>
+  <Tab>
+  ```bash copy
+yarn add vue-slicksort
+```
+  </Tab>
+</Tabs>
+
+### Update Configuration
+
+If you've previously published the Craftable PRO configuration file, please ensure it's updated. Compare your project's `config/craftable-pro.php` with the default configuration found at `vendor/brackets/craftable-pro/config/craftable-pro.php` and add any missing settings.
+
+### Update Inertia Request Handling
+
+If you've customized CraftableProHandleInertiaRequests middleware, update share method to include the following variables. This enhancement is crucial for supporting two-factor authentication and integrating with social media login services:
+
+```php copy
+public function share(Request $request): array
+{
+    // Prior shared data...
+
+    $showTwoFactorAuthCTA = $this->showTwoFactorAuthCTA($request);
+
+    return array_merge(parent::share($request), [
+        'auth' => [
+            // ...
+            'showTwoFactorCTA' => fn() => $showTwoFactorAuthCTA,
+        ],
+        // ...
+        'config' => [
+            'craftable_pro' => [
+                'track_user_last_active_time' => config('craftable-pro.track_user_last_active_time', false),
+            ],
+            'socialite' => [
+                'microsoft' => config('craftable-pro.social_login.allowed_services.microsoft', false),
+                'github' => config('craftable-pro.social_login.allowed_services.github', false),
+                'google' => config('craftable-pro.social_login.allowed_services.google', false),
+                'twitter' => config('craftable-pro.social_login.allowed_services.twitter', false),
+                'facebook' => config('craftable-pro.social_login.allowed_services.facebook', false),
+                'apple' => config('craftable-pro.social_login.allowed_services.apple', false),
+            ],
+            'media_library' => [
+                'max_file_size' => config('media-library.max_file_size', 1024 * 1024 * 2),
+            ]
+        ],
+        // ...
+    ]);
+}
+```
+
+### Run npm install and npm run craftable-pro:dev
+
+Finally, don't forget to run `craftable-pro:build` or `craftable-pro:dev` to ensure that your project's frontend assets are up-to-date.
+
+{/* prettier-ignore */}
+<Tabs items={["npm", "yarn"]}>
+  <Tab>
+  ```bash copy
+npm run craftable-pro:build
+```
+  </Tab>
+  <Tab>
+  ```bash copy
+yarn craftable-pro:build
+```
+  </Tab>
+</Tabs>
+
+</div>
