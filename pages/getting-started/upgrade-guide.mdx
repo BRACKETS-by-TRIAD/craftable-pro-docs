@@ -76,6 +76,23 @@ public function share(Request $request): array
         // ...
     ]);
 }
+
+private function showTwoFactorAuthCTA(Request $request): bool
+{
+    $showTwoFactorAuthCTA = false;
+
+    $twoFactorAuthRequired = $request->user('craftable-pro')
+        && ! $request->user('craftable-pro')->hasEnabledTwoFactorAuthentication()
+        && $request->user('craftable-pro')->hasRequiredTwoFactorAuthentication;
+
+    // the user will see the modal only once in 24 hours
+    if ($twoFactorAuthRequired && ! $request->cookie('twoFactorAuthCTAShown')) {
+        $showTwoFactorAuthCTA = true;
+        Cookie::queue('twoFactorAuthCTAShown', true, 60 * 24);
+    }
+
+    return $showTwoFactorAuthCTA;
+}
 ```
 
 ### Run npm install and npm run craftable-pro:dev
