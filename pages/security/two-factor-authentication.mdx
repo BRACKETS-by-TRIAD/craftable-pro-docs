@@ -5,6 +5,35 @@ import {Callout} from "nextra-theme-docs";
 
 Craftable Pro uses the [Laravel Fortify](https://laravel.com/docs/fortify) package to implement the backend part of the two-factor authentication.
 
+## Config
+
+CraftablePro overrides the default Fortify config with necessary value changes. However, if you have the `fortify.php` config
+already published or plan to publish it into your project, you will have to make a few changes to make it work with CraftablePro's
+two-factor authentication feature.
+
+```
+'guard' => 'craftable-pro',
+'views' => false,
+'features' => [
+        //Features::registration(),
+        //Features::resetPasswords(),
+        //Features::emailVerification(),
+        //Features::updateProfileInformation(),
+        //Features::updatePasswords(),
+        Features::twoFactorAuthentication([
+            'confirm' => true,
+            'confirmPassword' => true,
+            // 'window' => 0,
+        ]),
+    ],
+```
+Same as they are in `vendor/brackets/craftable-pro/config/fortify.php`
+
+Not all the features have to be disabled, but the Fortify registration, verification and password handling have not yet
+been tested within CraftablePro, as it comes with its own implementations.
+
+If the `'views'` would be set to `true`, Fortify would register its own routes for 2FA and there would be route naming conflicts when caching routes.
+
 ## Enable Two-Factor Authentication
 
 Each CraftableProUser can only manage their own 2FA setup. Two-factor authentication is only available for classical email/password login, not for social logins, as of yet.
