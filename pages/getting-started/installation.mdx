@@ -15,15 +15,33 @@ You can buy a license on our [Craftable PRO website](https://craftable.pro#prici
 After obtaining a valid [Craftable PRO license](https://craftable.pro#pricing) you need to add our private repository to your composer.json:
 
 ```bash copy
-composer config repositories.craftable-pro composer https://packages.craftable.pro/
+composer config repositories.craftable-pro composer https://packages.craftable.pro
 ```
 
 ### Add the package
 
-Require the package with composer. You will be asked for username and password during the installation. **Use your email address as the username and the license key, you received after purchasing the license, as the password.** Alternatively you can create local or global `auth.json` file with your credentials. You can find more information about this in the [Composer documentation](https://getcomposer.org/doc/articles/authentication-for-private-packages.md#authentication-in-auth-json-per-project).
+Require the package with composer. You will be asked for username and password during the installation. **Use your email address as the username and the license key, you received after purchasing the license, as the password.**
+To avoid manually typing these credentials, you may create a [Composer auth.json file](https://getcomposer.org/doc/articles/authentication-for-private-packages.md#authentication-in-auth-json-per-project) while using your [license key](https://craftable.pro#pricing) in place of your password:
 
 ```bash copy
-composer require brackets/craftable-pro
+composer config http-basic.packages.craftable.pro your-account-email@your-domain.com your-license-key
+```
+After running the command above, an `auth.json` file will be present in the same folder as the projects' `composer.json` file, like so:
+```json
+{
+    "http-basic": {
+        "packages.craftable.pro": {
+            "username": "your-account-email@your-domain.com",
+            "password": "your-license-key"
+        }
+    }
+}
+```
+
+With the configuration above in place, you'll be able to install Craftable PRO into your project using this command:
+
+```bash copy
+composer require "brackets/craftable-pro:^2.0"
 ```
 
 ### Install the package
