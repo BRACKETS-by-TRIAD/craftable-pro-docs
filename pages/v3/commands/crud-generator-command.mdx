@@ -1,0 +1,192 @@
+import { Callout, Tabs, Tab } from "nextra-theme-docs";
+
+# CRUD Generator command
+
+CRUD Generator allows you to easily generate CRUD for existing table. It will generate:
+
+- Model class
+- Controller class
+- Request classes
+- Routes
+- Vue files for listing and form
+- Typescript definitons
+- API endpoints
+- Export class
+
+## Usage
+
+We support two ways of generating CRUD. Using command with user-friendly wizard which will guide you through the process, or using [YAML config generation](/v3/basic-features/config-generator).
+
+To use wizard mode, you can either run the command with only `-w` or `--wizard` arguments like this:
+
+```bash copy
+php artisan craftable-pro:generate-crud -w
+```
+
+Or you can specify `table_name` parameter option like so:
+
+```bash copy
+php artisan craftable-pro:generate-crud {table_name} -w
+```
+
+Alternatively you can run the command without the wizard mode. It will read the database schema generate the CRUD by guessing the desired options:
+
+```bash copy
+php artisan craftable-pro:generate-crud {table_name}
+```
+
+<Callout>Parameter `table_name` must be an existing table</Callout>
+
+### Options
+
+- `--w|wizard` -> Wizard mode asks for most common options interactively
+- `--run-migration` -> Whether to run permission migration after generating CRUD or not
+- `--without-routes` -> Do not generate routes
+- `--without-sidebar` -> Do not append new module into the sidebar
+- `--dry-run` -> Display all information without actually generating anything';
+
+## Wizard mode
+
+When using wizard mode, generator will ask you a question about each feature you haven't provided directly with command option. You can combine this mode with explicitly defined options using their name from the list above.
+
+Bellow you will find all the options explained in more detail.
+
+### Listing columns
+
+This option allows you to select columns which will be displayed in the listing.
+
+<img
+  src="/images/crud-generator/listing-columns.png"
+/>
+
+### Sortable columns
+
+This option allows you to select columns which will be sortable in the listing. You can only choose from columns selected in the previous step.
+
+<img
+    src="/images/crud-generator/sortable-columns.png"
+/>
+
+### Searchable columns
+
+This option allows you to select columns which will be searchable in the listing. You can only choose from fields selected in the listing columns step.
+
+<img
+    src="/images/crud-generator/searchable-columns.png"
+/>
+
+### Form columns
+
+This option allows you to select columns which will be visible in the Vue form.
+
+<img
+  src="/images/crud-generator/form-columns.png"
+/>
+
+### Translatable columns
+
+This option allows you to select columns which will be translatable. You can only choose from those, which have defined `json` or `jsonb` type id database.
+
+<img
+  src="/images/crud-generator/translatable-columns.png"
+/>
+
+### Publishable columns
+
+This option allows you to select column which will be used for publishable feature. This will generate nice button in listing, with which you can quickly schedule or unpublish certain record. You can only choose from `date` or `datetime` columns.
+
+<img
+  src="/images/crud-generator/publishable-columns.png"
+/>
+
+### Media collections
+
+This option allows you to write names of media collection you want to register for your model.
+
+<img
+  src="/images/crud-generator/media-collections.png"
+/>
+
+### Image collections
+
+This option allows you to select which of the media collection you want to use as an image collections.
+
+<img
+  src="/images/crud-generator/image-collections.png"
+/>
+
+### Relations
+
+This option allows you to define relationships on your model.
+Defining relationship consist of multiple steps, so please take a look at the example bellow to get the idea about which question you can expect.
+Bear in mind that some of them might change depending on your choices.
+
+<img
+    src="/images/crud-generator/relations-add-relation.png"
+/>
+<img
+    src="/images/crud-generator/relations-type.png"
+/>
+<img
+    src="/images/crud-generator/relations-related-model.png"
+/>
+<img
+    src="/images/crud-generator/relations-foreign.png"
+/>
+<img
+    src="/images/crud-generator/relations-referenced.png"
+/>
+<img
+    src="/images/crud-generator/relations-label.png"
+/>
+<img
+    src="/images/crud-generator/relations-add-another.png"
+/>
+
+### Layout
+
+This option allows you to define the number of columns for your form layout.
+
+<img
+    src="/images/crud-generator/layout.png"
+/>
+
+If you decide to use multiple columns, you will be prompted to select fields for every column.
+
+<img
+    src="/images/crud-generator/layout-first-column.png"
+/>
+
+<img
+    src="/images/crud-generator/layout-second-column.png"
+/>
+
+### API endpoints
+
+This option allows you to define what API endpoints you want to generate.
+
+<img
+    src="/images/crud-generator/api-endpoints.png"
+/>
+
+Then you will be prompted to select fields for every API endpoint.
+
+<img
+    src="/images/crud-generator/api-index.png"
+/>
+
+### Export
+
+This option allows you to define if you want to generate export of your records to excel.
+
+<img
+    src="/images/crud-generator/export.png"
+/>
+
+### Dry run
+
+This option allows you to see outocome of your choices without actually generating or changing any files. You have to specify it when running the command itself:
+
+```
+php artisan craftable-pro:generate-crud -w --dry-run
+```

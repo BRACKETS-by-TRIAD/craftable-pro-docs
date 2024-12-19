@@ -1,0 +1,93 @@
+import {Callout} from "nextra-theme-docs";
+
+# Config Generator
+
+Craftable PRO provides a powerful YAML-based configuration system that allows you to quickly generate whole CRUD including multiple models, routes, controllers, views etc. from single YAML file.
+
+<Callout>
+YAML config files are also generated when using [CRUD generator command](/v3/commands/crud-generator-command)
+</Callout>
+
+## Using pre-made YAML configs
+
+Since you can define the whole CRUD in one YAML file, it is really easy to share the config files between the projects.
+We are right now preparing a set of shareable YAML files that you can use to generate the whole app like CRM or Blog.
+These YAML configs will be published soon on [craftable.pro](https://craftable.pro).
+
+## Example YAML config file
+
+```yaml copy
+craftable-pro:
+    models:
+        Post:
+            table: posts
+            skip_model: false
+            columns:
+                id: id
+                title: string
+                body: string
+                translatable_field: json
+                published_at: 'datetime nullable'
+                created_at: 'datetime nullable'
+                updated_at: 'datetime nullable'
+            listing:
+                id: 'sortable searchable'
+                title: 'sortable searchable'
+                published_at: sortable
+                created_at: sortable
+            form:
+                columns:
+                    -
+                        cards:
+                            -
+                                fields:
+                                    - title
+                                    - body
+                                    - translatable_field
+                    -
+                        cards:
+                            -
+                                fields:
+                                    - published_at
+            translatable:
+                - translatable_field
+            publishable: published_at
+            media_collections:
+                - cover: isImage
+                - gallery: isImage
+            relationships: {  }
+            api:
+                index:
+                    columns:
+                        - id
+                        - title
+                        - body
+                        - translatable_field
+                        - published_at
+                        - created_at
+                        - updated_at
+                store:
+                    columns:
+                        - title
+                        - body
+                        - translatable_field
+                        - published_at
+                update:
+                    columns:
+                        - title
+                        - body
+                        - translatable_field
+                        - published_at
+                show:
+                    columns:
+                        - id
+                        - title
+                        - body
+                        - translatable_field
+                        - published_at
+                        - created_at
+                        - updated_at
+                destroy: {  }
+            features:
+                - export
+```

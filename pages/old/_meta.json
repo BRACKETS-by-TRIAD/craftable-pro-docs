@@ -1,13 +1,12 @@
 {
-  "old": {
-    "type": "page",
-    "title": "v1/v2",
-    "href": "/old"
-  },
-  "v3": {
-    "type": "page",
-    "title": "v3",
-    "href": "/v3"
+  "index": "Introduction",
+  "getting-started": "Getting Started",
+  "basic-features": "Basic Features",
+  "security": "Security",
+  "frontend": "Frontend Assets",
+  "changelog": {
+    "title": "Changelog",
+    "type": "page"
   },
   "buy": {
     "title": "Pricing ↗",

@@ -1,0 +1,34 @@
+# Notifications
+
+Craftable PRO integrates with Laravel's database notifications system to provide a notification center within your admin panel. For basic notification usage, please refer to [Laravel's official notification documentation](https://laravel.com/docs/notifications).
+
+## Notification Center
+
+Craftable PRO provides a built-in notification dropdown in the admin panel header, allowing users to:
+
+- View unread notifications
+- Mark individual notifications as read
+- Mark all notifications as read
+- Navigate to related content through action URLs
+
+## Sending notifications
+Basics of sending notifications can be found in official Laravel documentation: [Sending Notifications](https://laravel.com/docs/notifications#sending-notifications)
+The notification should include:
+- title: text representing title of the notification
+- body: text representing body of the notification
+- icon: url of the image or null to use fallback icon
+- action: url that will be opened when notification is clicked or null to not open any url
+
+See the following example of toArray method in notification class:
+
+```php
+public function toArray(object $notifiable): array
+{
+    return [
+        'title' => 'Verification required',
+        'body' => 'Please verify your account by clicking on this notification',
+        'icon' => null,
+        'action' => 'https://demoapp.test/verify',
+    ];
+}
+```

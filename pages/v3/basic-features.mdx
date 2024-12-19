@@ -1,0 +1,37 @@
+# Basic Features
+
+import { Card, Cards } from "components/card";
+import {
+  UsersIcon,
+  LanguageIcon,
+  KeyIcon,
+  Cog8ToothIcon,
+  PhotoIcon,
+  CommandLineIcon,
+} from "@heroicons/react/24/outline";
+
+<Cards>
+  <Card icon={<UsersIcon />} title="Authentication" href="/v3/basic-features/authentication" />
+  <Card icon={<UsersIcon />} title="Users" href="/v3/basic-features/users" />
+  <Card
+    icon={<LanguageIcon />}
+    title="Translations"
+    href="/v3/basic-features/translations"
+  />
+  <Card
+    icon={<KeyIcon />}
+    title="Roles & Permissions"
+    href="/v3/basic-features/roles-permissions"
+  />
+  <Card
+    icon={<Cog8ToothIcon />}
+    title="Settings"
+    href="/v3/basic-features/settings"
+  />
+  <Card icon={<PhotoIcon />} title="Media" href="/v3/basic-features/media" />
+  <Card
+    icon={<CommandLineIcon />}
+    title="CRUD Generator"
+    href="/v3/basic-features/crud-generator"
+  />
+</Cards>
