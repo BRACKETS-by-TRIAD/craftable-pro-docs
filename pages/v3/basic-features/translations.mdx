@@ -36,23 +36,49 @@ By default, Craftable PRO comes with PhpScanner and JsScanner. In Craftable PRO 
 
 ```php filename="config/craftable-pro.php"
 'translations' => [
-    'scan' => [
-            PHPScanner::class => [
-                'paths' => [
-                    base_path('vendor/brackets/craftable-pro/src/Http/Controllers'),
-                    resource_path('views')
-                ]
-            ],
-            JsScanner::class => [
-                'paths' => [
-                    base_path('vendor/brackets/craftable-pro/resources/js'),
-                    resource_path('js'),
-                ],
+    'scanners' => [
+        [
+            'class' => PHPScanner::class,
+            'paths' => [
+                base_path('vendor/brackets/craftable-pro/src/Http/Controllers'),
+                resource_path('views')
+            ]
+        ],
+        [
+            'class' => JsScanner::class,
+            'paths' => [
+                base_path('vendor/brackets/craftable-pro/resources/js'),
+                resource_path('js'),
+            ]
+        ],
+        [
+            'class' => JsonScanner::class,
+            'group' => 'permissions',
+            'paths' => [
+                resource_path('translations/permissions'),
             ]
         ],
 
-    //...
-]
+        [
+            'class' => PHPScanner::class,
+            'paths' => [
+                resource_path('translations/permissions'),
+            ]
+        ],
+
+    ],
+
+    //-----------------------------------------------------
+    // Example of publishing of json file with translations
+    //-----------------------------------------------------
+
+    'publish' => [
+        'craftable-pro' => [
+            'groups' => ['craftable-pro', 'permissions', 'locales'],
+            'path' => public_path('lang/'),
+        ],
+    ]
+],
 ```
 
 As you can see, it is very straightforward. You just have to define the scanner and paths to be scanned.
