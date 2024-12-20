@@ -8,11 +8,75 @@ Craftable PRO provides a powerful YAML-based configuration system that allows yo
 YAML config files are also generated when using [CRUD generator command](/v3/commands/crud-generator-command)
 </Callout>
 
-## Using pre-made YAML configs
+## Configuration Structure
 
-Since you can define the whole CRUD in one YAML file, it is really easy to share the config files between the projects.
-We are right now preparing a set of shareable YAML files that you can use to generate the whole app like CRM or Blog.
-These YAML configs will be published soon on [craftable.pro](https://craftable.pro).
+The configuration file is built around models. You can define multiple models in one file. 
+For each model you can define the following:
+
+### table
+
+The name of the table in the database. For example `posts`.
+
+### skip_model
+
+If set to `true`, the model class will not be generated or overwritten if exists.
+
+### columns
+
+Database columns definition. This use common syntax with Laravel Blueprint. Please refer to official [Blueprint docs](https://blueprint.laravelshift.com/docs/defining-models/) to see all definitions.
+
+### listing
+
+List of columns that should be displayed in the listing table. The order will be preserved and used in the table.
+
+You can add `sortable` to allow sorting by the column.
+
+You can add `searchable` to allow search by the column.
+
+### form
+
+List of fields that will be used for edit/create form. Fields need to be defined inside `cards` and `columns`.
+This is because the form can have multi column layout, where every column can have multiple cards (visual group of fields).
+
+Refer to the example YAML config file bellow to see the exact structure.
+
+### translatable
+
+List of fields, that should be translatable. For these fields, you will be able to use translations by Spatie's [Laravel Translatable package](https://spatie.be/docs/laravel-translatable/introduction).
+
+### publishable
+
+Name of the field, that will be used for publishing functionality. Special form field and listing column will be generated for publishable field.
+
+### media_collections
+
+List of media collections, using Spatie's [Laravel Medialibrary](https://spatie.be/docs/laravel-medialibrary/introduction).
+
+You can add `isImage` to collection to define image collection.
+
+### relationships
+
+List of relationships you want to define on the model. You can define `belongsTo` or `belongsToMany` relationships.
+
+### api
+
+List of API endpoints. You can generate following endpoints:
+- index
+- store
+- update
+- show
+- destroy
+
+Every endpoint except `destroy` requires you to define `columns`, which is list of 
+fields that will be returned from the enpoint (for GET requests) or be accepted by the endpoint
+(for POST/PUT requests).
+
+If you want to skip generation of specific endpoint, simply exclude it from the config file.
+
+### features
+
+List of additional features that will be generated. Right now, we support following features:
+- `export`: will generate excel export
 
 ## Example YAML config file
 
@@ -91,3 +155,9 @@ craftable-pro:
             features:
                 - export
 ```
+
+## Using pre-made YAML configs
+
+Since you can define the whole CRUD in one YAML file, it is really easy to share the config files between the projects.
+We are right now preparing a set of shareable YAML files that you can use to generate the whole app like CRM or Blog.
+These YAML configs will be published soon on [craftable.pro](https://craftable.pro).
