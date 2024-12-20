@@ -73,30 +73,6 @@ php artisan craftable-pro:scan-translations
 
 All translations are then available on the Translations page, where you can edit them.
 
-### External Scanners
-
-In addition to PHP and JS scanners Craftable PRO can deal also with JSON files. We call those external, as they can be unrelated directly to your app.
-
-Under the translations in config you can specify external scanners. You just have to specify the path to the scanned folder. Scanning process is the same as with external scanners.
-
-```php filename="config/craftable-pro.php"
-'external' =>
-    [
-        [
-            'group' => 'permissions',
-            'scan' => [
-                JsonScanner::class => [
-                    'paths' => [
-                        resource_path('translations/permissions'),
-                    ]
-                ],
-            ]
-        ],
-    ],
-```
-
-All found json files will be scanned and found keys will be added to Translations Manager.
-
 ### Digging deeper
 
 You can prepare your own scanners. For your convenience, we prepared interfaces `ScannerInterface.php` and `ExternalScannerInterface.php`. You can implement these interfaces and use your own scanner in the config file.
