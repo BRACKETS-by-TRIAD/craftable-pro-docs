@@ -4,14 +4,77 @@ To configure Craftable PRO, you can publish the configuration file using the fol
 
 ```bash
 php artisan vendor:publish --tag=craftable-pro-config
-````
+```
 
-Bellow you can find description of most of the configuration options:
+Craftable PRO allows you to configure multiple settings in the configuration file.
+You can find description for most of them bellow:
 
-- `default_media_disk_name` -> disk name defined in config/filesystems.php which will be used for storing media files
-- `require_email_verified` -> if set to true, then user must verify his email address in order to be able to log in
-- `allow_only_active_users_login` -> if set to true, then only active users can log in
-- `track_user_last_active_time` -> if set to true, then user last activity timestamp will be tracked with every request
-- `handle-inertia-request-class` -> class which will be used for handling Inertia requests
-- `self_registration.enabled` -> if set to true, then self registration will be enabled
-- `self_registration.default_role` -> default role which will be assigned to newly registered user
+### craftable_pro_user_model
+
+The fully qualified model class for user.
+
+### unassigned_media_model
+
+The fully qualified model class for unassigned media used by underlying Laravel Media Library.
+
+### craftable_pro_api_user_model
+
+The fully qualified model class used for API user.
+
+### default_media_disk_name
+
+Disk name defined in config/filesystems.php which will be used for storing media files.
+
+### require_email_verified
+
+If set to true, then user must verify his email address in order to be able to log in.
+
+### allow_only_active_users_login
+
+If set to true, then only active users can log in.
+
+### track_user_last_active_time
+
+If set to true, then user last activity timestamp will be tracked with every request.
+
+### handle-inertia-request-class
+
+Class which will be used for handling Inertia requests
+
+### self_registration.enabled
+
+If set to true, users will be able to register by themselves.
+
+### self_registration.default_role
+
+Default role which will be assigned to newly registered user.
+
+### self_registration.allowed_domains
+
+List of domains for self registration, that are allowed for registration.
+User with email address with domain that is not within `allowed_domains` will not be allowed to register.
+
+### translations
+
+For full translations configuration, please refer to [Translations docs](/v3/basic-features/translations).
+
+### social_login.allowed_services.*
+
+If set to true, users will be able to use the service social login.
+
+### social_login.self_registration.enabled
+
+If set to true, users will be able to register by themselves.
+
+### social_login.self_registration.default_role
+
+Default role which will be assigned to newly registered user (registered via social login).
+
+### social_login.self_registration.allowed_domains
+
+List of domains for self registration, that are allowed for social login registration.
+User with email address with domain that is not within `allowed_domains` will not be allowed to register.
+
+### notifications.model
+
+The fully qualified model used for database notifications.
