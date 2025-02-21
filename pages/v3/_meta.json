@@ -4,10 +4,9 @@
   "basic-features": "Basic Features",
   "security": "Security",
   "frontend": "Frontend Assets",
-  "changelog": {
-    "title": "Changelog",
-    "type": "page"
-  },
+  "commands": "Commands",
+  "pipeline-authentication": "Pipeline Authentication",
+  "changelog": "Changelog",
   "buy": {
     "title": "Pricing ↗",
     "type": "page",
