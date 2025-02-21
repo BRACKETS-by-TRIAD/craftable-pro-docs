@@ -1,0 +1,104 @@
+import { Callout } from "nextra-theme-docs";
+import Image from "components/image";
+
+# Users
+
+Craftable PRO comes with CRUD for users where you can manage who has the access to the Craftable PRO interface. Optionally, you can manage also other types of users for example in your frontend or mobile app (and assign them a different roles like Visitor or Member). Craftable PRO additionally introduces several handy features.
+
+## Self-registration
+
+To read about self registration, head to [Traditional Login](/v3/basic-features/authentication#traditional-login) page.
+
+## Verification
+
+<br />
+<Image alt="Verification" src="/images/activate.png" />
+
+To require email verification before logging in, you have to set `require_email_verified` in Craftable PRO config file to `true`. Then every newly registered user will be obliged to confirm registration via email.
+
+```php filename="config/craftable-pro.php"
+// define if email must be verified in order to be able to log in
+'require_email_verified' => true,
+```
+
+There is a dedicated column `email_verified_at` in `craftable_pro_users` table serving this purpose.
+
+## Deactivation
+
+You can deactivate the user by choosing "Deactivate" in the user options.
+
+<br />
+
+<Image src="/images/deactivate-button.png" />
+
+If `allow_only_active_users_login` in Craftable PRO config is set to `true`, this user will no longer be able to log in. The change will be reflected in the column `active` in `craftable_pro_users` table.
+
+```php filename="config/craftable-pro.php"
+// define or only active users can log in
+'allow_only_active_users_login' => true,
+```
+
+## Delete (soft)
+
+You can delete a user by selecting "Access" from the menu and choosing "Delete" in the user options. The change will be reflected in the column `deleted_at` in `craftable_pro_users` table.
+
+<Callout type={"default"}>
+  We are using soft deletes in combination with email uniqueness. The e-mail
+  address has to be unique, however after the user is deleted, he/she can be
+  created (via registration, invitation or even manually) again with the same
+  e-mail address even though he/she is currently soft deleted.
+</Callout>
+
+## Digging deeper
+
+### Custom user model
+
+You can use your own user model by setting `craftable_pro_user_model` in Craftable PRO config file. The model has to extend `Brackets\CraftablePro\Models\BaseCraftableProUser` class.
+
+<div className="steps-container">
+
+### Create new extending model, e.g.:
+
+```php
+namespace App\Models;
+
+use Brackets\CraftablePro\Models\BaseCraftableProUser;
+
+class MyCraftableProUser extends BaseCraftableProUser
+{
+    protected $table = 'craftable_pro_users';
+    protected $guard = 'craftable-pro';
+
+    protected $appends = ['resource_url', 'avatar', 'avatar_url', 'media_details', 'has_enabled_two_factor_authentication', 'full_name'];
+
+    public function getFullNameAttribute(): string
+    {
+        return $this->first_name . " " . $this->last_name;
+    }
+}
+```
+
+### In config/craftable-pro.php set the new model:
+```php filename="config/craftable-pro.php"
+'craftable_pro_user_model' => App\Models\MyCraftableProUser::class,
+```
+
+### In config/auth.php set the new model in providers
+```php filename="config/auth.php"
+use App\Models\MyCraftableProUser;
+
+'providers' => [
+        'craftable-pro-users' => [
+            'driver' => 'eloquent',
+            'model' => MyCraftableProUser::class,
+        ],
+],
+'guards' => [
+        'craftable-pro' => [
+            'driver' => 'session',
+            'provider' => 'craftable-pro-users',
+        ],
+ ],
+```
+
+</div>

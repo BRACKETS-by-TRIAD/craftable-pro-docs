@@ -1,0 +1,102 @@
+import { Callout, Tab, Tabs } from 'nextra-theme-docs';
+
+# Installation
+
+Craftable PRO is a package for Laravel that can be installed on any existing Laravel 10+ project. If you're starting a new project, install Laravel first - please follow steps in the official [Laravel documentation](https://laravel.com/docs/installation).
+
+<div className="steps-container">
+
+### Buy license
+
+You can buy a license on our [Craftable PRO website](https://craftable.pro#pricing). Afterwards, you will receive an email with a license key which you will need to continue with the installation.
+
+### Register the repository
+
+After obtaining a valid [Craftable PRO license](https://craftable.pro#pricing) you need to add our private repository to your composer.json:
+
+```bash copy
+composer config repositories.craftable-pro composer https://packages.craftable.pro/
+```
+
+### Add the package
+
+Require the package with composer. You will be asked for username and password during the installation. **Use your email address as the username and the license key, you received after purchasing the license, as the password.** Alternatively you can create local or global `auth.json` file with your credentials. You can find more information about this in the [Composer documentation](https://getcomposer.org/doc/articles/authentication-for-private-packages.md#authentication-in-auth-json-per-project).
+
+```bash copy
+composer require brackets/craftable-pro
+```
+
+### Install the package
+
+This command will publish resources, migrations, configs, edit some configuration files and more. <br/>
+Check out [Install command](/v3/commands/installation-command) section for more information.
+
+```bash copy
+php artisan craftable-pro:install
+```
+
+### Build frontend assets
+
+You can use whatever package manager you preffer, but we will use `npm` in this example.
+
+{/* prettier-ignore */}
+<Tabs items={["npm", "yarn"]}>
+  <Tab>
+  ```bash copy
+npm install
+```
+  </Tab>
+  <Tab>
+  ```bash copy
+yarn install
+```
+  </Tab>
+</Tabs>
+
+Afterwards you can start Vite with:
+
+{/* prettier-ignore */}
+<Tabs items={["npm", "yarn"]}>
+  <Tab>
+  ```bash copy
+npm run craftable-pro:dev
+```
+  </Tab>
+  <Tab>
+  ```bash copy
+yarn craftable-pro:dev
+```
+  </Tab>
+</Tabs>
+
+Or you can build the assets for production with:
+
+{/* prettier-ignore */}
+<Tabs items={["npm", "yarn"]}>
+  <Tab>
+  ```bash copy
+npm run craftable-pro:build
+```
+  </Tab>
+  <Tab>
+  ```bash copy
+yarn craftable-pro:build
+```
+  </Tab>
+</Tabs>
+
+<Callout>
+  Note that if you use InertiaJS in your project, we recommend you to [merge Vite
+  configs](/v3/getting-started/vite-configuration#combining-vite-configs). We also recommend
+  to [separate Craftable PRO
+  routes](/v3/getting-started/inertiajs-configuration#using-inertiajs-outside-craftable-pro)
+  from your application routes to isolate InertiaJS middlewares.
+</Callout>
+
+### Test your installation
+
+After running Vite, you should be able to visit Craftable PRO at `http://localhost/admin`.
+
+Login with the credentials provided during installation.
+
+</div>

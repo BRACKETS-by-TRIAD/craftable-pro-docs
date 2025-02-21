@@ -1,0 +1,492 @@
+# Changelog
+
+All notable changes to Craftable PRO will be documented on this page.
+
+<div className="changelog-container">
+
+## v3.0.0 - 2025-02-21
+
+### What's Changed
+
+- feat: new CLI
+- feat: config based generator based on Blueprint
+- feat: support for multiple column layouts
+- feat: API generator
+- feat: dark mode
+- feat: enahnced translations config
+- feat: Laravel 12 support
+- feat: Inertia 2.0.0
+- feat: Ziggy v2 support
+- feat: don't publish default pages, resolving them automatically
+- feat: composer clean Laravel 11
+- feat: notifications support
+- feat: refactor components to dark mode
+- fix: fixing tests
+- fix: multiple minor fixes
+
+### [Upgrade Guide](/getting-started/upgrade-guide)
+
+## v2.0.5 - 2024-10-30
+
+### What's Changed
+
+- fix: make date pickers clearable by @strstensky in https://github.com/BRACKETS-by-TRIAD/craftable-pro/pull/452
+- feat: added min/max date props by @vsotreshko in https://github.com/BRACKETS-by-TRIAD/craftable-pro/pull/437
+
+## v2.0.4 - 2024-09-28
+
+### What's Changed
+
+- fix: Fixed preserving the state of the form when search applied
+- fix: Added validation to onFilesDrop function
+- fix: Multiselect improvements
+- fix: Fix generator column options
+- feat: Register on login when self-register enabled
+- feat: Redirect to the previous URL if exists, after login
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v2.0.3 - 2024-06-07
+
+### What's Changed
+
+- feat: added ability to select translatable field as an accessor for relation
+- feat: in Edit/Create forms, default locale is now taken from the default locale settings
+- feat: made 'preserveState' and 'preserveScroll' overridable
+- feat: Setting 'selectedLocale' for 'Wysiwyg'
+- fix: resolved issues with medialibrary enums during manipulation
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v2.0.2 - 2024-04-15
+
+### What's Changed
+
+- fix: user dropdown on mobile
+- fix: set default column type in generator to string
+- fix: passing 'disabled' prop to the button component
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v2.0.1 - 2024-03-15
+
+### What's Changed
+
+- feat: added support for Laravel 11
+- feat: added support for the newest versions of the laravel-permission package and media library package
+- fix: corrected the order of conditions in the publishable trait
+- fix: made permissions human-readable
+- fix: assigned the Admin role based on name, not on ID, during installation
+- fix: removed the settings permission from the user profile
+- fix: renamed routes to avoid naming conflicts
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v2.0.0 - 2024-02-12
+
+### What's Changed
+
+- feat: domain restricted registration
+- feat: add support for 2FA
+- feat: sortable component
+- feat: make CraftableProUser model swappable for other model in config
+- feat: added support for time column in generator
+- fix: password format in src/Http/Requests/Auth/InviteUserStoreRequest.php
+- fix: translations import validation message
+- fix: populate locale field in auth form from shared settings data
+- fix: added close logic for media element
+- fix: password reset route names
+- fix: when disabled verification set verified now
+- fix: load max file size in media library from config
+
+### [Upgrade Guide](/getting-started/upgrade-guide)
+
+## v1.1.22 - 2023-12-05
+
+### What's Changed
+
+- feat: implemented Role CRUD operations and new Role permission migration
+- feat: added delete role validation
+- fix: added longText type in getAndSetTranslatableColumns
+- feat: added social login
+- feat: added socialite self registration
+- fix(sidebar): Resolve display issue with user's name and email
+- fix(generator): add leading slash to model namespace in relationships
+
+### Upgrade Guide
+
+- [Install](https://www.php.net/manual/en/sodium.installation.php) Sodium extension for PHP if you don't have it already
+- Run `composer update` to update dependencies
+- Run `php artisan vendor:publish --tag=craftable-pro-migrations` to publish new role permissions migration
+- Run `php artisan migrate` to migrate new role permissions
+
+## v1.1.21 - 2023-10-24
+
+### What's Changed
+
+- fix: show validation message in invite user
+- feat: added casting to generator/model
+- fix: translation issue on homepage with default locale
+- fix: deleted unused directive
+- fix: pagination displaying ('No Items' after changing results per page)
+- fix: select for default route on settings page showing no options
+- fix: hide dropdown on button edit click
+- fix: image not displaying in crop editor after clicking "Crop" button
+- fix: sorting logic in ListingHeaderCell
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.20 - 2023-08-31
+
+### What's Changed
+
+- fix: Wysiwyg support for objects and arrays in addImage function after adding multiple upload functionality
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.19 - 2023-08-25
+
+### What's Changed
+
+- Feat: Implemented multiple image upload for media
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.18 - 2023-08-24
+
+### What's Changed
+
+- fix: clarify Multiselect single label behavior
+- fix: resolve issues with multiple authentication guards
+- fix: fixed not loading preview_url to media library
+- fix: fixed multiple active links, when urls starts the same
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.17 - 2023-08-18
+
+### What's Changed
+
+- fix: resolve bug in activeFiltersCount for filter change on Users screen
+- fix: centered profile avatar
+- fix: resolve styling issue with placeholder in Multiselect component
+- fix: resolve bulk action error in Listing
+- fix: reset filters fix for arrays
+- fix: changed column key type
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.16 - 2023-07-25
+
+### What's Changed
+
+- Fix: verification email route
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.15 - 2023-07-24
+
+### What's Changed
+
+- Fix: bug in filters count
+- Fix: validation error on translatable fields
+- Fix: disabled multiselect styles
+- Fix: add doctrine/dbal composer package
+- Fix: add missing @tiptap/pm npm package
+- Fix: translation publish error in firefox
+- Fix: overriding translations
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.14 - 2023-06-20
+
+### What's Changed
+
+- Feat: ship with translations for permissions and make generator generates default translations for permissions
+- Feat: generator should support also adding relations to CraftablePRO models
+- Feat: add support boolean column, update Toggle component
+- Fix: generator belongs to many
+- Fix: add ES module support
+- Fix: added right padding for tags, to prevent overflow
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+- If you have `"type": "module"` in your package.json (this apply for Laravel projects newer than `v10.2.0`), please follow the steps bellow to upgrade. Otherwise, you can skip these steps.
+  - Make sure you don't have any `require` in your `craftable-pro.vite.config.js`, if so, please take a look on the Vite config [here](/getting-started/vite-configuration#alternatively-use-inline-postcss-configuration), and change yours accordingly
+  - Make sure you have `@formkit/auto-animate` in your package.json with the version `0.7.0` or higher
+
+## v1.1.13 - 2023-05-25
+
+### What's Changed
+
+- Fix: Dropzone components update
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.12 - 2023-05-25
+
+### What's Changed
+
+- Fix: add timestamps options to listing generator
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.11 - 2023-05-22
+
+### What's Changed
+
+- Fix: modify styles to work better on mobile devices
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.10 - 2023-04-28
+
+### What's Changed
+
+- Feat: added 'size' prop to 'Publish' component
+- Fix: multiwords table names
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.9 - 2023-04-26
+
+### What's Changed
+
+- Fix: PHPArrayScanner to only scan .php files
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.8 - 2023-04-20
+
+### What's Changed
+
+- Feat: add new DateRangePicker componnet
+- Fix: use customised Logo in Auth layout
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.7 - 2023-04-13
+
+### What's Changed
+
+- Fix: Fixed 'Invalid Date' issue in DatePicker cleaning.
+- Fix: Bumped actions/checkout dependency from 3.4.0 to 3.5.0.
+- Feat: Made 'useForm' accept null values.
+- Fix: Fixed 'sticky' classes to make sticky work.
+- Feat: Added the ability to change locale for DatePicker component.
+- Fix: Updated npm packages.
+- Feat: Added the ability to use label/value pairs for SelectInput.
+- Fix: Fixed date format for Publish component.
+- Feat: Added file scanner for PHP array translations.
+- Fix: Removed unnecessary imports in Vue components that caused npm warnings.
+- Fix: Changed CraftableProUser e-mail through Access tab instead of Profile.
+- Feat: Added new PHP array scanner for default Laravel trans files.
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.6 - 2023-03-21
+
+### What's Changed
+
+- Fix: remove unnecessary css import
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.5 - 2023-03-16
+
+### What's Changed
+
+- Fix: significantly reduce chunk size after build
+- Fix: position of locale input on register page
+- Fix: unify return types in generated controller
+- Fix: remove show route from generated routes, since it just throws error
+- Fix: redirect to previous listing route after model update
+- Fix: reset listing page to 1 on search and filter
+- Fix: improve type definitions in some Vue components
+- Fix: some overall tweaks and fixes
+- Feat: improve customization of inputs in dropzone
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.4 - 2023-03-1
+
+### What's Changed
+
+- Fix Index.vue template in generator
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.3 - 2023-02-24
+
+### What's Changed
+
+- Some small tweaks and fixes
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.2 - 2023-02-22
+
+### What's Changed
+
+- Fix: bug which prevented multiple edits on Manage permissions page
+- Fix: add missing page titles
+- Fix: generator will provide options to choose table name if there is none provided
+- Fix: generator should detect existing eloquent model and if present it should ask if it should be overwritten
+- Fix: make translations scanner case sensitive in default Laravel installation with MySQL
+- Fix: resend invitation error
+- Fix: check permissions on translations edit button
+- Fix: add baseUrl as computed for filters and listing
+- Fix: change generated export name
+- Other small tweaks and fixes
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1.1 - 2023-02-15
+
+### What's Changed
+
+- Fix: compatibility issues with latest InertiaJS release
+- Fix: add custom guest middleware to prevent redirects to `/home` for authenticated users
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.1 - 2023-02-14
+
+### What's Changed
+
+- Feat: Laravel 10 support
+- Fix: fixed kebabcase to snakecase for generated relation name
+- Fix: add custom 'verified' middleware to prevent bug with 'auth' middleware
+- Fix: requests generating with wrong namespaces
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+- If you have any multiword relation name in generated listing file, change the name from kebab to snake case (e.g. `article-categories` to `article_categories`)
+- If you have any Craftable PRO requests already generated, check if their namespace is correct. Each request should have following namespace `App\Http\Requests\CraftablePro\<ModelName>`. If it's not like that, please change their namespace from `App\Http\Requests\CraftablePro` to `App\Http\Requests\CraftablePro\<ModelName>` (e.g. `App\Http\Requests\CraftablePro\Article`). Don't forget to change the namespace in the controllers as well.
+
+## v1.0.4 - 2023-02-13
+
+### What's Changed
+
+- Fix: generator generating wrong and incomplete TS definitions
+- Fix: prefix names of some Craftble PRO routes missed in the last release
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+- Edit all already generated Craftable PRO .vue files and change the import of `InertiaForm` type from `import { InertiaForm } from "@inertiajs/vue3";` to `import { InertiaForm } from "craftable-pro/types";`
+
+## v1.0.3 - 2023-02-10
+
+### What's Changed
+
+- Fix: prefix names of all Craftble PRO routes with `craftable-pro.`
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+- Edit all already generated Craftable PRO routes as seen on the example below
+  - change middlewares on all Craftable PRO routes from `->middleware(['craftable-pro-middlewares', 'auth:craftable-pro'])` to`->middleware('craftable-pro-middlewares')`
+  - find all instances of `route` function with built-in Craftable PRO routes in your Sidebar.vue file. See the list bellow for all Craftable PRO routes and change them to include `craftable-pro.` prefix (note that `*` is a wildcard for all nested routes):
+    - `route('media.*')` -> `route('craftable-pro.media.*')`
+    - `route('craftable-pro-users.*')` -> `route('craftable-pro.craftable-pro-users.*')`
+    - `route('roles.*')` -> `route('craftable-pro.roles.*')`
+    - `route('translations.*')` -> `route('craftable-pro.translations.*')`
+    - `route('settings.*')` -> `route('craftable-pro.settings.*')`
+  - (optional) add `->name('craftable-pro.')` to all generated Craftable PRO routes
+  - (optional) modify all instances of `route` function in your generated Craftable PRO .vue files to include `craftable-pro.` prefix as well
+
+Example of modified Craftable PRO routes:
+
+```php {1}
+Route::prefix('admin')->middleware('craftable-pro-middlewares')->name('craftable-pro.')->group(function () {
+    Route::get('articles', [ArticleController::class, 'index'])->name('articles.index');
+    Route::get('articles/create', [ArticleController::class, 'create'])->name('articles.create');
+    Route::post('articles', [ArticleController::class, 'store'])->name('articles.store');
+    Route::get('articles/{article}', [ArticleController::class, 'show'])->name('articles.show');
+    Route::get('articles/edit/{article}', [ArticleController::class, 'edit'])->name('articles.edit');
+    Route::match(['put', 'patch'], 'articles/{article}', [ArticleController::class, 'update'])->name('articles.update');
+    Route::delete('articles/{article}', [ArticleController::class, 'destroy'])->name('articles.destroy');
+    Route::post('articles/bulk-destroy', [ArticleController::class, 'bulkDestroy'])->name('articles.bulk-destroy');
+});
+```
+
+## v1.0.2 - 2023-02-10
+
+### What's Changed
+
+- Fix: allow menu dropdown to float outside of main content
+- Fix: image collection option bug
+- Fix: generator related fixes
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+- Run `npm i @headlessui-float/vue` to install new npm dependency
+
+## v1.0.1 - 2023-02-09
+
+### What's Changed
+
+- Fix: headings in export not translated
+- Fix: controller name causing error in 'route:list' command
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v1.0.0 - 2023-02-07
+
+### 🎉 Initial release 🎉
+
+</div>

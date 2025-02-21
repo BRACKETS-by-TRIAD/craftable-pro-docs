@@ -1,0 +1,147 @@
+import { Callout, Tab, Tabs } from 'nextra-theme-docs';
+
+# Upgrading from v2.x
+Follow these steps to upgrade your Craftable PRO installation to v3.
+
+## New Requirements
+- Laravel v11.0+
+- Inertia.js v2
+
+## Upgrade
+<div className="steps-container">
+
+### Update composer.json
+Increase version number of `"brackets/craftable-pro"` in `composer.json` to ^3.0 and run:
+
+```bash copy
+composer update brackets/craftable-pro -W
+```
+
+### Publish Migrations, Assets, and JS Stubs
+Execute the following commands in your terminal to publish migrations, public assets, and JavaScript stubs required for Craftable PRO:
+```bash copy
+php artisan vendor:publish --provider="Brackets\CraftablePro\CraftableProServiceProvider" --tag="craftable-pro-migrations"
+php artisan vendor:publish --provider="Brackets\CraftablePro\CraftableProServiceProvider" --tag="craftable-pro-public"
+php artisan vendor:publish --provider="Brackets\CraftablePro\CraftableProServiceProvider" --tag="craftable-pro-js-stubs"
+```
+
+Don't forget to run the migrations after publishing them:
+```bash copy
+php artisan migrate
+```
+
+### Update Configuration
+
+If you've previously published the Craftable PRO configuration file, please ensure it's updated.
+In v3, we changed config for `translations`.
+
+Compare your values in your project's `config/craftable-pro.php` with the default configuration found at `vendor/brackets/craftable-pro/config/craftable-pro.php`.
+
+### Update ziggy import
+
+Replace ziggy import inside your `resources/js/craftable-pro/index.ts` to:
+
+```js copy
+import { ZiggyVue } from "ziggy/src/js";
+```
+
+### Load built-in pages from vendor
+
+In v2, the built-in pages like Media or Users were published to your project.
+As part of v3, we created a system for loading pages from vendor, so it is no longer required for them to be published.
+
+You can safely delete the built-in pages from `resources/js/craftable-pro/Pages` unless you have edited any of them.
+The built-in pages are:
+
+```
+    └── resources/
+        └── js/
+            └── craftable-pro/
+                └── Pages/
+                    ├── Auth/
+                    ├── CraftableProUser/
+                    ├── Media/
+                    ├── Permissions/
+                    ├── Roles/
+                    ├── Settings/
+                    ├── Translations/
+                    └── Home.vue
+```
+
+
+To correctly load pages from vendor, replace `resolve` part in your `resources/js/craftable-pro/index.tx` to following:
+
+```js copy
+resolve: async (name: string) => {
+    // Getting all the pages from the craftable-pro package
+    const craftableProPagesGlob = import.meta.glob(
+        "../../../vendor/brackets/**/resources/js/Pages/**/*.vue",
+    );
+
+    // Getting all local pages
+    const pagesLocalGlob = import.meta.glob("./Pages/**/*.vue");
+
+    // Resolving all the pages from the craftable-pro package and the local package
+    const [pagesCraftablePro, pagesLocal] = await Promise.all([
+        craftableProPagesGlob,
+        pagesLocalGlob,
+    ]);
+
+    // Merging all the pages from the craftable-pro package and the local package with the local ones taking precedence
+    const pages = { ...pagesCraftablePro, ...pagesLocal };
+
+    // Finding the page that matches the name
+    const pagePath = Object.keys(pages).find((key) =>
+        key.endsWith(`/${name}.vue`),
+    );
+
+    // Throwing an error if the page is not found
+    if (!pagePath) {
+        throw new Error(`Page '${name}' not found.`);
+    }
+
+    // Getting the page component
+    const pageComponent = (await pages[pagePath]()).default;
+
+    const page = pageComponent;
+
+    // Setting the layout if it's not set
+    if (page.layout === undefined) {
+        if (name.startsWith("Auth/")) {
+            page.layout = GuestLayout;
+        } else {
+            page.layout = AuthenticatedLayout;
+        }
+    }
+
+    return page;
+},
+```
+
+### Upgrade npm dependencies
+
+To update to Inertia.js v2, you need to upgrade the npm package by running:
+
+```bash copy
+npm install @inertiajs/vue3@2
+```
+
+### Run npm install and npm run craftable-pro:dev
+
+Finally, don't forget to run `craftable-pro:build` or `craftable-pro:dev` to ensure that your project's frontend assets are up-to-date.
+
+{/* prettier-ignore */}
+<Tabs items={["npm", "yarn"]}>
+  <Tab>
+  ```bash copy
+npm run craftable-pro:build
+```
+  </Tab>
+  <Tab>
+  ```bash copy
+yarn craftable-pro:build
+```
+  </Tab>
+</Tabs>
+
+</div>
