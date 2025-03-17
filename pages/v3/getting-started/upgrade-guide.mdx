@@ -45,6 +45,8 @@ Replace ziggy import inside your `resources/js/craftable-pro/index.ts` to:
 import { ZiggyVue } from "ziggy/src/js";
 ```
 
+If error about missing Tightenco\Ziggypops up, clear the views cache, or remove @routes in `resources/views/craftable-pro.blade.php` and put back. Namespace was changed from Tightenco\Ziggy to Tighten\Ziggy.
+
 ### Load built-in pages from vendor
 
 In v2, the built-in pages like Media or Users were published to your project.
@@ -69,7 +71,7 @@ The built-in pages are:
 ```
 
 
-To correctly load pages from vendor, replace `resolve` part in your `resources/js/craftable-pro/index.tx` to following:
+To correctly load pages from vendor, replace `resolve` part in your `resources/js/craftable-pro/index.ts` to following:
 
 ```js copy
 resolve: async (name: string) => {
@@ -88,7 +90,7 @@ resolve: async (name: string) => {
     ]);
 
     // Merging all the pages from the craftable-pro package and the local package with the local ones taking precedence
-    const pages = { ...pagesCraftablePro, ...pagesLocal };
+    const pages = { ...pagesLocal, ...pagesCraftablePro };
 
     // Finding the page that matches the name
     const pagePath = Object.keys(pages).find((key) =>
@@ -118,6 +120,22 @@ resolve: async (name: string) => {
 },
 ```
 
+### Upgrade Tailwind config
+
+To craftable-pro.tailwind.config.js add darkMode: 'class'.
+
+```bash copy
+module.exports = {
+  content: [
+    "./resources/views/craftable-pro.blade.php",
+    "./resources/js/craftable-pro/**/*.vue",
+    "./vendor/brackets/craftable-pro/resources/js/**/*.vue"
+  ],
+  darkMode: 'class',
+  theme: {
+  ...
+```
+
 ### Upgrade npm dependencies
 
 To update to Inertia.js v2, you need to upgrade the npm package by running:
@@ -125,6 +143,10 @@ To update to Inertia.js v2, you need to upgrade the npm package by running:
 ```bash copy
 npm install @inertiajs/vue3@2
 ```
+
+### Update overloaded theme files
+
+In case you overloaded any of the theme files, you need to check the changes in the original files and apply them to your own files.
 
 ### Run npm install and npm run craftable-pro:dev
 
