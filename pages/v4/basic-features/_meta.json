@@ -1,0 +1,12 @@
+{
+  "authentication": "Authentication",
+  "users": "Users",
+  "translations": "Translations",
+  "roles-permissions": "Roles & Permissions",
+  "settings": "Settings",
+  "media": "Media",
+  "crud-generator": "CRUD Generator",
+  "config-generator": "Config Generator",
+  "notifications": "Notifications",
+  "dark-mode": "Dark Mode"
+}

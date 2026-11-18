@@ -1,0 +1,175 @@
+import { Callout } from "nextra-theme-docs";
+import Image from "components/image";
+import Video from "components/video";
+
+# Using filters in listing
+
+Craftable PRO does not generate listings with filters for now, so you have to edit generated files manually to add filters if you need to. You can follow this documentation page to learn how to add filters to your listing.
+
+In this documentation I will use the `Article` model as an example and I will implement filters for `author_id` column which will allow to filter articles by their authors and `published_at` column, which will allow to filter articles based on the day they are published at .
+
+<div className="steps-container">
+
+### Edit your controller
+
+First we need to edit generated controller for our model and add columns we want to filter by into the query builder using the `allowedFilters` method. You can learn more about the query builder in the [Spatie's Query Builder documentation](https://spatie.be/index.php/docs/laravel-query-builder/v5/features/filtering).
+I will also include all authors in the Inertia response so we can use them in the Multiselect component later. All together it will look like this:
+
+```php filename="app/Http/Controllers/CraftablePro/Article/ArticleController.php" {10-11, 27}
+public function index(IndexArticlesRequest $request)
+{
+    $articlesQuery = QueryBuilder::for(Article::class)
+        ->allowedFilters([
+            AllowedFilter::custom('search', new FuzzyFilter(
+                'id',
+                'title',
+                'published_at'
+            )),
+            AllowedFilter::exact('author_id'),
+            AllowedFilter::callback('published_at', fn (Builder $query, $value) => $query->whereDate('published_at', $value)),
+        ])
+        ->defaultSort('id')
+        ->allowedSorts(['id', 'title', 'published_at'])
+        ->with('author');
+
+    if ($request->wantsJson() && $request->get('bulk_select_all')) {
+        return response()->json($articlesQuery->select(['id'])->pluck('id'));
+    }
+
+    $articles = $articlesQuery
+        ->select(['id', 'title', 'published_at', 'author_id'])
+        ->paginate($request->get('per_page'))->withQueryString();
+
+    return Inertia::render('Article/Index', [
+        'articles' => $articles,
+        'authors' => Author::get()->map->only(['id', 'full_name']),
+    ]);
+}
+```
+
+<Callout>
+  You can define filters simply by passing the column name to the
+  `allowedFilters` method, but in this case we want to use exact match for the
+  `author_id` column and we want to use custom callback for the `published_at`
+  column so we can filter by date, without taking time into the account. You can
+  learn more about all the options in the [Spatie's Query Builder
+  documentation](https://spatie.be/index.php/docs/laravel-query-builder/v5/features/filtering).
+</Callout>
+
+### Import useListingFilters hook
+
+Next we need to edit generated Vue component for listing. In our case it is located in `resources/js/craftable-pro/Pages/Article/Index.vue`.
+To make things little bit easier, we created handy `useListingFilters` hook that you can use to add filters to your listing. You can import it like this:
+
+```js copy
+import { useListingFilters } from "craftable-pro/hooks/useListingFilters";
+```
+
+This hook has two parameters. First one is the URL of your Listing, in our case it is `route("craftable-pro.articles.index")`. Second one is the default values for filters. In our case we want to filter by `author_id` and `published_at` columns. We can get the default values from the page props where `filter` is predefined object to contain all filters. All together it will looke like this:
+
+```vue filename="resources/js/craftable-pro/Pages/Article/Index.vue"
+<template>...</template>
+<script setup lang="ts">
+import { useListingFilters } from "craftable-pro/hooks/useListingFilters";
+
+...
+
+const { filtersForm, resetFilters, activeFiltersCount } = useListingFilters(
+  route("craftable-pro.articles.index"),
+  {
+    author_id: usePage().props.filter?.author_id ?? null,
+    published_at: usePage().props.filter?.published_at ?? null,
+  }
+);
+</script>
+```
+
+<Callout>
+  `filter` in `usePage().props.filter` is default key in the page props that is
+  used to pass filters to the listing. You can change this key by customizing
+  the HandleInertiaMiddleware. See the [InertiaJS configuration
+  page](https://docs.craftable.pro/getting-started/inertiajs-configuration#middleware)
+  for more details.
+</Callout>
+
+### Import FiltersDropdown component
+
+Next we need to import `FiltersDropdown` component that will be used to display filters in the listing. You can import it like this:
+
+```js copy
+import { FiltersDropdown } from "craftable-pro/Components";
+```
+
+Afterward you have to use the slot in the component `Listing` named `#actions` to inject `FiltersDropdown` component into your listing header. Don't forget to pass all the required props, namely `activeFiltersCount` and `resetFilters`. The whole Index.vue component should look something like this.
+
+```vue filename="resources/js/craftable-pro/Pages/Article/Index.vue" {10-29,42}
+<template>
+  ...
+
+  <PageContent>
+    <Listing
+      :baseUrl="route('craftable-pro.articles.index')"
+      :data="articles"
+      dataKey="articles"
+    >
+      <template #actions>
+        <FiltersDropdown
+          :activeFiltersCount="activeFiltersCount"
+          :resetFilters="resetFilters"
+        >
+          <Multiselect
+            v-model="filtersForm.author_id"
+            name="author_id"
+            :label="$t('craftable-pro', 'Authors')"
+            :options="authors"
+            optionsLabel="full_name"
+            optionsValueProp="id"
+          />
+          <DatePicker
+            v-model="filtersForm.published_at"
+            name="published_at"
+            :label="$t('craftable-pro', 'Published at')"
+          />
+        </FiltersDropdown>
+      </template>
+
+      ...
+    </Listing>
+  </PageContent>
+</template>
+<script setup lang="ts">
+import { useListingFilters } from "craftable-pro/hooks/useListingFilters";
+import {
+  PageContent,
+  Listing,
+  Multiselect,
+  DatePicker,
+  FiltersDropdown,
+ } from "craftable-pro/Components";
+
+...
+
+const { filtersForm, resetFilters, activeFiltersCount } = useListingFilters(
+  route("craftable-pro.articles.index"),
+  {
+    author_id: usePage().props.filter?.author_id ?? null,
+    published_at: usePage().props.filter?.published_at ?? null,
+  }
+);
+</script>
+```
+
+<Callout>
+  Keep in mind that some parts of the code above were hidden for the sake of
+  brevity.
+</Callout>
+
+### Try it out
+
+Now you can try it out. You should see the filters in the listing header. You can use them to filter articles by their authors and by the day they are published at.
+This is just a basic example, you can do so much more with filters. Also if you have any trouble getting them to work, feel free to contact us.
+
+<br />
+<Video src="/video/how-to-use-filters.mp4" />
+
+</div>
