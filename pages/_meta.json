@@ -9,6 +9,11 @@
     "title": "v3",
     "href": "/v3"
   },
+  "v4": {
+    "type": "page",
+    "title": "v4",
+    "href": "/v4"
+  },
   "buy": {
     "title": "Pricing ↗",
     "type": "page",

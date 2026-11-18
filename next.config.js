@@ -11,7 +11,7 @@ module.exports = withNextra({
     return [
       {
         source: '/',
-        destination: '/v3',
+        destination: '/v4',
         permanent: false, // Redirect the root to the latest version
       },
     ];
