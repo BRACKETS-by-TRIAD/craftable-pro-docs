@@ -1,170 +1,403 @@
-import { Callout, Tab, Tabs } from 'nextra-theme-docs';
+import { Callout } from 'nextra-theme-docs';
 
-# Upgrading from v2.x
-Follow these steps to upgrade your Craftable PRO installation to v3.
+# Upgrading from v3.x
+
+Follow these steps to upgrade your Craftable PRO installation to v4. This release adds Laravel 13 support and drops Laravel 11.
+
+Most of the work is in your **application code**: controllers and exports that the Craftable PRO generator wrote for you use the old `spatie/laravel-query-builder` v6 API, and they have to be updated by hand. The admin's frontend moves to Vite 8 and Tailwind CSS 4.
+
+Estimated effort: 15–60 minutes, depending on how many CRUDs you generated.
+
+<Callout>
+  Upgrading from v2? Upgrade to v3 first, following the [v3 upgrade guide](/v3/getting-started/upgrade-guide).
+</Callout>
 
 ## New Requirements
-- Laravel v11.0 or v12.0
-- PHP 8.2+
-- Inertia.js v2
+- Laravel 12 or 13 (Laravel 11 is no longer supported)
+- PHP 8.3+
+- Node.js 20.19+ or 22.12 and newer, including 24 and 26 (required by Vite 8)
 
 ## Upgrade
 <div className="steps-container">
 
-### Update composer.json
-Increase version number of `"brackets/craftable-pro"` in `composer.json` to ^3.0 and run:
+### Check the requirements
+
+| | v3.x | v4.0 |
+|---|---|---|
+| PHP | ^8.2 | **^8.3** |
+| Laravel | 11, 12 | **12, 13** |
+| nesbot/carbon | 2 or 3 | **3** |
+
+If you are on Laravel 11, upgrade to Laravel 12 first
+([Laravel upgrade guide](https://laravel.com/docs/12.x/upgrade)), then continue here.
+
+### Update composer dependencies
 
 ```bash copy
-composer update brackets/craftable-pro -W
+composer require brackets/craftable-pro:^4.0 -W
 ```
 
-### Publish Migrations, Assets, and JS Stubs
-Execute the following commands in your terminal to publish migrations, public assets, and JavaScript stubs required for Craftable PRO:
-```bash copy
-php artisan vendor:publish --provider="Brackets\CraftablePro\CraftableProServiceProvider" --tag="craftable-pro-migrations"
-php artisan vendor:publish --provider="Brackets\CraftablePro\CraftableProServiceProvider" --tag="craftable-pro-public"
-php artisan vendor:publish --provider="Brackets\CraftablePro\CraftableProServiceProvider" --tag="craftable-pro-js-stubs"
+`-W` is required, because several dependencies move to a new major version
+together:
+
+| Package | v3.x | v4.0 |
+|---|---|---|
+| spatie/laravel-query-builder | ^6.0 | **^7.0** (breaking, see [below](#update-generated-controllers-and-exports-required)) |
+| spatie/laravel-permission | ^6.3 | **^8.0** (see [below](#check-spatielaravel-permission-usage-v6--v8)) |
+| maatwebsite/excel | ^3.1 | ^3.1.68 **or ^4.0** |
+| socialiteproviders/apple | ^5.6 | ^5.6 **or ^6.0** |
+
+On PHP 8.5 and newer, Composer will install `maatwebsite/excel` 4.x, because
+3.x cannot be installed there.
+
+### Update generated controllers and exports (required)
+
+`spatie/laravel-query-builder` v7 changed `allowedFilters()`, `allowedSorts()`,
+`allowedIncludes()`, `allowedFields()`, `defaultSort()` and `defaultSorts()` to
+take **variadic arguments instead of an array**. Passing an array now throws a
+`TypeError`.
+
+Every controller and export that the generator created has this pattern. Find them:
+
+```bash
+grep -rnE "allowed(Filters|Sorts|Includes|Fields)\(\s*\[|defaultSorts?\(\s*\[" app/
 ```
 
-Don't forget to run the migrations after publishing them:
-```bash copy
-php artisan migrate
+…and remove the square brackets:
+
+```php
+// Before
+$query = QueryBuilder::for(Post::class)
+    ->allowedFilters([
+        AllowedFilter::custom('search', new FuzzyFilter('id', 'title')),
+    ])
+    ->defaultSort($defaultSort)
+    ->allowedSorts(['id', 'title']);
+
+// After
+$query = QueryBuilder::for(Post::class)
+    ->allowedFilters(
+        AllowedFilter::custom('search', new FuzzyFilter('id', 'title')),
+    )
+    ->defaultSort($defaultSort)
+    ->allowedSorts('id', 'title');
 ```
 
-### Update Configuration
+If the list is built at runtime, unpack it: `->allowedSorts(...$columns)`.
 
-If you've previously published the Craftable PRO configuration file, please ensure it's updated.
-In v3, we changed config for `translations`.
+Also check the following, if your code uses them:
 
-Compare your values in your project's `config/craftable-pro.php` with the default configuration found at `vendor/brackets/craftable-pro/config/craftable-pro.php`.
+- **`'*'` wildcards** in `allowed*()` are no longer supported. List the names explicitly.
+- **`SortDirection`** is now an enum: `SortDirection::DESCENDING` → `SortDirection::Descending`.
+- **`AllowedFilter::beginsWithStrict()` / `endsWithStrict()`** were renamed to `beginsWith()` / `endsWith()`.
+- **Custom delimiters**: the static `QueryBuilderRequest::set*Delimiter()` methods and the
+  `$arrayValueDelimiter` argument were removed. Use `->delimiter('|')` on the filter, or the
+  `delimiter` key in `config/query-builder.php`.
+- **Published `config/query-builder.php`**: `disable_invalid_includes_query_exception` is now
+  `disable_invalid_include_query_exception`, and `count_suffix` / `exists_suffix` were merged
+  into a single `suffixes` array.
 
-### Update ziggy import
+Full details: [laravel-query-builder UPGRADING.md](https://github.com/spatie/laravel-query-builder/blob/main/UPGRADING.md#from-v6-to-v7).
 
-Replace ziggy import inside your `resources/js/craftable-pro/index.ts` to:
+### Update custom filters and sorts
 
-```js copy
-import { ZiggyVue } from "ziggy/src/js";
+The `Filter` and `Sort` interfaces now declare a `void` return type, and filters
+take `mixed $value`. Update any custom filter or sort classes in your app:
+
+```php
+// Before
+public function __invoke(Builder $query, $value, string $property) { /* ... */ return $query; }
+
+// After
+public function __invoke(Builder $query, mixed $value, string $property): void { /* ... */ }
 ```
 
-If error about missing Tightenco\Ziggypops up, clear the views cache, or remove @routes in `resources/views/craftable-pro.blade.php` and put back. Namespace was changed from Tightenco\Ziggy to Tighten\Ziggy.
+The same change applies to Craftable PRO's own classes. If you **extend** them,
+update your method signatures:
 
-### Load built-in pages from vendor
+| Class | Change |
+|---|---|
+| `Brackets\CraftablePro\Queries\Filters\FuzzyFilter::__invoke()` | `mixed $values`, returns `void` (previously returned the `Builder`) |
+| `Brackets\CraftablePro\Queries\Sorts\SortNullsLast::__invoke()` | returns `void` |
+| `Brackets\CraftablePro\Translations\Export\TranslationsExport::collection()` | returns `Illuminate\Support\Enumerable` |
+| `Brackets\CraftablePro\Translations\Import\TranslationsImport::collection()` | returns `void` |
 
-In v2, the built-in pages like Media or Users were published to your project.
-As part of v3, we created a system for loading pages from vendor, so it is no longer required for them to be published.
+If you called `FuzzyFilter` directly and used its return value, use the query
+you passed in instead. The filter now changes it in place and returns nothing.
 
-You can safely delete the built-in pages from `resources/js/craftable-pro/Pages` unless you have edited any of them.
-The built-in pages are:
+Two classes were removed or renamed. Most apps never reference them directly,
+because they resolve `Brackets\CraftablePro\DatabaseManager\DatabaseManager` from the container:
 
-```
-    └── resources/
-        └── js/
-            └── craftable-pro/
-                └── Pages/
-                    ├── Auth/
-                    ├── CraftableProUser/
-                    ├── Media/
-                    ├── Permissions/
-                    ├── Roles/
-                    ├── Settings/
-                    ├── Translations/
-                    └── Home.vue
-```
+| Before | After |
+|---|---|
+| `Brackets\CraftablePro\DatabaseManager\L11DatabaseManager` | `Brackets\CraftablePro\DatabaseManager\SchemaDatabaseManager` |
+| `Brackets\CraftablePro\DatabaseManager\DbalDatabaseManager` | removed (Doctrine DBAL is not used since Laravel 11) |
 
+### Check spatie/laravel-permission usage (v6 → v8)
 
-To correctly load pages from vendor, replace `resolve` part in your `resources/js/craftable-pro/index.ts` to following:
+The database schema has not changed, so **no new migration is needed**, and your
+published `config/permission.php` keeps working. The new keys (`models.team`,
+`models.default_model`, `team_resolver`) default to safe values.
 
-```js copy
-resolve: async (name: string) => {
-    // Getting all the pages from the craftable-pro package
-    const craftableProPagesGlob = import.meta.glob(
-        "../../../vendor/brackets/**/resources/js/Pages/**/*.vue",
-    );
+You only need to act if your app:
 
-    // Getting all local pages
-    const pagesLocalGlob = import.meta.glob("./Pages/**/*.vue");
+- **listens to permission events**: they were renamed with an `Event` suffix
+  (`RoleAttached` → `RoleAttachedEvent`, `PermissionDetached` → `PermissionDetachedEvent`, …);
+- **references the command classes**: these also got a `Command` suffix
+  (`CacheReset` → `CacheResetCommand`, …). Artisan command names are unchanged;
+- **extends the `Role`/`Permission` models or implements their contracts**:
+  `findByName()` and `findOrCreate()` now accept `BackedEnum|string`, and
+  `HasRoles`/`HasPermissions` methods such as `assignRole()` and `syncPermissions()` now return `static`;
+- **calls `PermissionRegistrar::clearClassPermissions()`**: use `clearPermissionsCollection()` instead.
 
-    // Resolving all the pages from the craftable-pro package and the local package
-    const [pagesCraftablePro, pagesLocal] = await Promise.all([
-        craftableProPagesGlob,
-        pagesLocalGlob,
-    ]);
+Full details: [laravel-permission upgrading guide](https://spatie.be/docs/laravel-permission/v8/upgrading).
 
-    // Merging all the pages from the craftable-pro package and the local package with the local ones taking precedence
-    const pages = { ...pagesLocal, ...pagesCraftablePro };
+### Update frontend dependencies
 
-    // Finding the page that matches the name
-    const pagePath = Object.keys(pages).find((key) =>
-        key.endsWith(`/${name}.vue`),
-    );
+v4 updates the npm packages the admin is built with, to clear every known
+vulnerability (`npm audit` reports 0). The installer only writes these into new
+apps, so **update your app's `package.json` yourself**:
 
-    // Throwing an error if the page is not found
-    if (!pagePath) {
-        throw new Error(`Page '${name}' not found.`);
-    }
+| Package | Before | After |
+|---|---|---|
+| `vite` | ^5.0.0 | **^8.0.0** |
+| `laravel-vite-plugin` | ^1.2.0 | **^3.1.0** (3.x requires Vite 8) |
+| `@vitejs/plugin-vue` | ^4.0.0 | **^6.0.0** |
+| `@tiptap/*` (`vue-3`, `starter-kit`, `pm`, and the `image`, `link`, `text-align`, `youtube` extensions) | ^2.0.0 | **^3.30.4** |
+| `@tiptap/extension-underline` | ^2.0.0 | **remove** (part of `starter-kit` since Tiptap 3) |
+| `@tiptap/extension-heading` | (none) | **add ^3.30.4** |
+| `laravel-vue-i18n` | ^1.4.4 | **^2.9.0** (v1 pulls in `laravel-mix` and webpack) |
+| `uuid` | ^9.0.0 | **^14.0.0** |
+| `@types/vue-cropperjs` | ^4.1.2 | **remove** (Vue 2 typings that pull in the `vue` 2 package) |
 
-    // Getting the page component
-    const pageComponent = (await pages[pagePath]()).default;
+Also add this override. `@tailwindcss/typography` pins a vulnerable
+`postcss-selector-parser`, even in its latest release:
 
-    const page = pageComponent;
-
-    // Setting the layout if it's not set
-    if (page.layout === undefined) {
-        if (name.startsWith("Auth/")) {
-            page.layout = GuestLayout;
-        } else {
-            page.layout = AuthenticatedLayout;
-        }
-    }
-
-    return page;
-},
+```json
+"overrides": {
+    "postcss-selector-parser": "^6.1.5"
+}
 ```
 
-### Upgrade Tailwind config
+npm reads `overrides`. With yarn, add the same entry under `resolutions`; with
+pnpm, under `pnpm.overrides`. The installer writes all three.
 
-To craftable-pro.tailwind.config.js add darkMode: 'class'.
+<Callout>
+  Haven't changed the published frontend files? `php artisan craftable-pro:install --overwrite`
+  rewrites `craftable-pro.vite.config.js` and `resources/css/craftable-pro.css` for you. Without
+  `--overwrite`, the installer keeps your files and warns if they still use Vite 5 or Tailwind 3.
+</Callout>
 
-```bash copy
-module.exports = {
-  content: [
-    "./resources/views/craftable-pro.blade.php",
-    "./resources/js/craftable-pro/**/*.vue",
-    "./vendor/brackets/craftable-pro/resources/js/**/*.vue"
-  ],
-  darkMode: 'class',
-  theme: {
-  ...
-```
+Then reinstall and rebuild:
 
-### Upgrade npm dependencies
-
-To update to Inertia.js v2, you need to upgrade the npm package by running:
-
-```bash copy
-npm install @inertiajs/vue3@2
-```
-
-### Update overloaded theme files
-
-In case you overloaded any of the theme files, you need to check the changes in the original files and apply them to your own files.
-
-### Run npm install and npm run craftable-pro:dev
-
-Finally, don't forget to run `craftable-pro:build` or `craftable-pro:dev` to ensure that your project's frontend assets are up-to-date.
-
-{/* prettier-ignore */}
-<Tabs items={["npm", "yarn"]}>
-  <Tab>
-  ```bash copy
+```bash
+npm install
+npm audit
 npm run craftable-pro:build
 ```
-  </Tab>
-  <Tab>
-  ```bash copy
-yarn craftable-pro:build
+
+Two more changes, if you have published Craftable PRO's frontend stubs:
+
+- **`craftable-pro.vite.config.js`**: remove `splitVendorChunkPlugin` from the
+  `vite` import and from `plugins`. Current Vite versions no longer have it.
+- **TypeScript only**: add `resources/js/craftable-pro/vue-cropperjs.d.ts` with
+  `declare module "vue-cropperjs";`, which replaces the removed `@types/vue-cropperjs`.
+
+If your own code uses Tiptap, `laravel-vue-i18n` or Vite plugins directly, check
+their upgrade guides. The admin's own editor already uses the Tiptap 3 API.
+
+### Migrate to Tailwind CSS 4
+
+The admin is now built with Tailwind CSS 4, the version Laravel 12 and 13 apps
+ship with. Before, the installer replaced the app's Tailwind 4 with Tailwind 3,
+which broke the app's own `npm run build`.
+
+The admin's theme now lives in the package's CSS, so future theme changes arrive
+with `composer update`. Your app keeps only a small entry stylesheet.
+
+**1. Update `package.json`:**
+
+| Package | Before | After |
+|---|---|---|
+| `tailwindcss` | ^3.x | **^4.0.0** |
+| `@tailwindcss/vite` | (none) | **add ^4.0.0** |
+| `@tailwindcss/forms` | ^0.5.x | **^0.5.10** |
+| `@tailwindcss/typography` | ^0.5.x | **^0.5.16** |
+| `autoprefixer`, `postcss`, `postcss-import` | | remove, unless your own code uses them |
+
+**2. Replace `resources/css/craftable-pro.css`** with:
+
+```css
+@import "tailwindcss" source(none);
+@import "craftable-pro/../css/craftable-pro.css";
+
+@plugin "@tailwindcss/typography";
+@plugin "@tailwindcss/forms";
+
+@source "../views/craftable-pro.blade.php";
+@source "../js/craftable-pro";
+@source "../../vendor/brackets/craftable-pro/resources/js";
 ```
-  </Tab>
-</Tabs>
+
+The `@source` lines are required. Tailwind 4 skips git-ignored folders such as
+`vendor/` when it looks for class names, so without them the admin's styles are
+missing.
+
+**3. Delete `craftable-pro.tailwind.config.js`.** If you changed it, for example
+the primary colour, add the change to the end of `resources/css/craftable-pro.css`:
+
+```css
+@theme {
+    --color-primary-500: #0ea5e9;
+    --color-primary-600: #0284c7;
+}
+```
+
+**4. Update `craftable-pro.vite.config.js`:** import Tailwind's Vite plugin,
+add it to `plugins`, and empty the `css.postcss.plugins` list. Keep the empty
+list: without it, Vite loads your app's own `postcss.config.js`, and a Tailwind 3
+one (`tailwindcss`, `autoprefixer`) breaks the admin build:
+
+```js
+import tailwindcss from "@tailwindcss/vite";
+
+export default defineConfig({
+  plugins: [
+    laravel({ /* unchanged */ }),
+    tailwindcss(),
+    vue({ /* unchanged */ }),
+  ],
+  css: {
+    postcss: {
+      plugins: [],
+    },
+  },
+  // ...
+});
+```
+
+While you are in this file, replace `__dirname` with `import.meta.dirname` in
+the `resolve.alias` paths. Vite 8 warns about `__dirname`, because it won't work
+once Vite's native config loader becomes the default.
+
+**5. Your own admin pages.** The admin's built-in components are already
+migrated. Pages that the CRUD generator created only use classes that work the
+same in v4. If you wrote or changed pages in `resources/js/craftable-pro`
+yourself, rename these classes:
+
+| v3 | v4 |
+|---|---|
+| `shadow-sm` / `shadow` | `shadow-xs` / `shadow-sm` |
+| `rounded-sm` / `rounded` | `rounded-xs` / `rounded-sm` |
+| `outline-none` | `outline-hidden` |
+| `ring` | `ring-3` |
+| `flex-shrink-0`, `flex-grow` | `shrink-0`, `grow` |
+| `!mt-2` (important prefix) | `mt-2!` (important suffix) |
+| `bg-black bg-opacity-10` (also `ring-opacity-*`, `text-opacity-*`, …) | `bg-black/10` |
+
+The [official upgrade tool](https://tailwindcss.com/docs/upgrade-guide) (`npx @tailwindcss/upgrade`)
+can do this for you. Check its result: it renames the string `"outline"` to
+`"outline-solid"` even where it is a prop value such as `<Button variant="outline">`,
+and it can leave `bg-opacity-*` and `ring-opacity-*` unconverted. The rest of the
+[Tailwind upgrade guide](https://tailwindcss.com/docs/upgrade-guide#changes-from-v3) covers less common cases.
+
+Colours from the admin theme (primary, secondary, gray, warning, danger,
+success, info) look exactly as before. Other Tailwind colours used directly,
+such as `text-indigo-600`, use Tailwind 4's slightly more vivid palette.
+
+Then rebuild: `npm install && npm run craftable-pro:build`.
+
+### Update invitation links
+
+Invitation links are now signed, time-limited URLs (see [Users](/v4/basic-features/users#invitations)). This fixes a security issue where anyone who knew a user's e-mail could set that user's password through the invitation form. You only need to act if:
+
+- **you published `resources/js`** (`craftable-pro-resources` tag): update `Pages/Auth/InviteUser.vue`. The page now receives an `action` prop with the signed URL and must post the form there instead of `route("craftable-pro.invite-user.store")`;
+- **you overrode the `invite_user` e-mail template**: use the new `$url` variable for the button link instead of `route('craftable-pro.invite-user.create', $email)`.
+
+Invitation e-mails sent before the upgrade contain unsigned links and stop working. Resend those invitations from the user list.
+
+### Fix the settings table (projects installed before v3)
+
+This applies only if your project was installed when Craftable PRO used
+`spatie/laravel-settings` 2, before Craftable PRO 3. It isn't new in v4, but it is
+easy to miss. Projects installed later already have the right table.
+
+The `settings` migration from version 2 has no unique index on `(group, name)`.
+Version 3, which Craftable PRO 3 and 4 require, saves settings with an upsert on
+those two columns, so:
+
+- **PostgreSQL:** saving settings throws, because the upsert needs a unique index
+  to match on.
+- **MySQL / MariaDB:** saving doesn't fail, but every save inserts new rows
+  instead of updating the old ones. Your table may already contain duplicates.
+
+Check your `*_create_settings_table.php` migration. If it has an index on `group`
+but no `unique(['group', 'name'])`, and `locked` has no default, add this
+migration. It keeps the newest row of every duplicate, then adds the index and
+gives `locked` a default of `false`, as in version 3:
+
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        $table = config('settings.repositories.database.table') ?? 'settings';
+
+        // Remove duplicates, keeping the newest row (the last saved value)
+        $duplicates = DB::table($table)
+            ->select('group', 'name', DB::raw('MAX(id) as keep_id'))
+            ->groupBy('group', 'name')
+            ->havingRaw('COUNT(*) > 1')
+            ->get();
+
+        foreach ($duplicates as $duplicate) {
+            DB::table($table)
+                ->where('group', $duplicate->group)
+                ->where('name', $duplicate->name)
+                ->where('id', '!=', $duplicate->keep_id)
+                ->delete();
+        }
+
+        $hasUnique = Schema::hasIndex($table, ['group', 'name'], 'unique');
+
+        Schema::table($table, function (Blueprint $blueprint) use ($hasUnique): void {
+            $blueprint->boolean('locked')->default(false)->change();
+
+            if (! $hasUnique) {
+                $blueprint->unique(['group', 'name']);
+            }
+        });
+    }
+};
+```
+
+Back up the `settings` table before running it on production, since it deletes
+the duplicate rows.
+
+### Behaviour changes (no action needed)
+
+- Social login errors ("Given e-mail domain is not enabled.", "Self registration
+  is not allowed.") are now translated properly. Before, they were passed to the
+  wrong translation helper.
+- An invalid media upload path now always throws `InvalidUploadPath`. On Laravel 13
+  it previously surfaced as a Flysystem exception.
+
+### Verify the upgrade
+
+```bash
+php artisan optimize:clear
+php artisan test
+```
+
+Then click through each generated listing in the admin and try search, sorting
+and export. Any controller you missed in the controllers step fails on its index page with a
+`TypeError` mentioning `allowedFilters` or `allowedSorts`.
 
 </div>

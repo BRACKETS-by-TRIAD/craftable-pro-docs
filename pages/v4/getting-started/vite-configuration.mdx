@@ -1,6 +1,10 @@
+import { Callout } from 'nextra-theme-docs';
+
 # Vite configuration
 
-Installing Craftable PRO will copy to your project Vite config file `craftable-pro.vite.config.js` which you can run with `npm run craftable-pro:dev`. This is made to separate Craftable PRO assets building from your project assets building.
+Installing Craftable PRO copies a Vite config file, `craftable-pro.vite.config.js`, to your project. You run it with `npm run craftable-pro:dev`. This keeps the Craftable PRO build separate from your project's own build.
+
+Craftable PRO v4 is built with **Vite 8** and **Tailwind CSS 4** (through the `@tailwindcss/vite` plugin). Vite 8 requires Node.js 20.19+ or 22.12 and newer (Node 24 and 26 work too).
 
 ## Scripts
 
@@ -9,43 +13,108 @@ Craftable PRO comes with two NPM scripts in `package.json` to build assets. Thos
 - `npm run craftable-pro:dev` -> runs Vite in development mode
 - `npm run craftable-pro:build` -> runs Vite in production mode
 
+## Default config
+
+This is the config the installer publishes:
+
+```js filename="craftable-pro.vite.config.js"
+import { defineConfig } from "vite";
+import laravel from "laravel-vite-plugin";
+import vue from "@vitejs/plugin-vue";
+import { resolve } from "path";
+import tailwindcss from "@tailwindcss/vite";
+
+export default defineConfig({
+  plugins: [
+    laravel({
+      input: [
+        "resources/js/craftable-pro/index.ts",
+        "resources/css/craftable-pro.css",
+      ],
+      refresh: true,
+    }),
+    tailwindcss(),
+    vue({
+      template: {
+        transformAssetUrls: {
+          base: null,
+          includeAbsolute: false,
+        },
+      },
+    }),
+  ],
+  // Keep the admin build isolated from the app's own postcss.config.js
+  // (e.g. a Tailwind 3 setup with tailwindcss/autoprefixer plugins).
+  css: {
+    postcss: {
+      plugins: [],
+    },
+  },
+  resolve: {
+    alias: {
+      "@": resolve(import.meta.dirname, "./resources/js"),
+      "craftable-pro": resolve(
+        import.meta.dirname,
+        "./vendor/brackets/craftable-pro/resources/js"
+      ),
+      ziggy: resolve(import.meta.dirname, "./vendor/tightenco/ziggy"),
+    },
+  },
+});
+```
+
+<Callout>
+  Keep the empty `css.postcss.plugins` list. Without it, Vite loads your app's own
+  `postcss.config.js`, and a Tailwind 3 one (with `tailwindcss` and `autoprefixer` plugins)
+  breaks the admin build.
+</Callout>
+
 ## Aliases
 
-Craftable PRO needs three Vite aliases to work properly. These aliases are defined in the `craftable-pro.vite.config.js` file. Bellow is their explanation for better orientation:
+Craftable PRO needs three Vite aliases to work properly. These aliases are defined in the `craftable-pro.vite.config.js` file. Below is their explanation for better orientation:
 
 - `@` - pointing to resources folder in your project, where are located some of the components for better customizability. This alias is used by some of the Craftable PRO components, so please don't change it since it might break your layout.
 - `craftable-pro` - used to load all Craftable PRO components
 - `ziggy` - used to load helper functions from Ziggy to used named routes in your project
 
+## Stylesheet
+
+There is no Tailwind config file. The admin's theme lives in the package's CSS, and your project keeps only a small entry stylesheet:
+
+```css filename="resources/css/craftable-pro.css"
+@import "tailwindcss" source(none);
+@import "craftable-pro/../css/craftable-pro.css";
+
+@plugin "@tailwindcss/typography";
+@plugin "@tailwindcss/forms";
+
+@source "../views/craftable-pro.blade.php";
+@source "../js/craftable-pro";
+@source "../../vendor/brackets/craftable-pro/resources/js";
+```
+
+The `@source` lines are required. Tailwind 4 skips git-ignored folders such as `vendor/` when it looks for class names, so without them the admin's styles are missing. `source(none)` stops Tailwind from scanning the rest of your app, so your own frontend classes don't end up in the admin's CSS.
+
+To change the theme, see [Customization](/v4/frontend/customization#theme).
+
 ## Combining Vite configs
 
 If you use Vite in your project already for the frontend side of your application, you can combine your Vite config with the one from Craftable PRO. This is useful if you don't want to have two separate npm scripts for running Vite.
 
-To combine them, please follow steps bellow:
+New Laravel 12 and 13 apps already use Tailwind CSS 4 with the `@tailwindcss/vite` plugin, so both stylesheets are built by the same plugin. Each one keeps its own `@source` list, so the two builds don't mix.
+
+To combine them, please follow steps below:
 
 <div className="steps-container">
 
-### Add Tailwind config to `craftable-pro.css`
-
-Add path to `craftable-pro.tailwind.config.js` in the `resources/css/craftable-pro.css` file:
-
-```css filename="resources\css\craftable-pro.css" copy {3}
-@import "craftable-pro/../css/craftable-pro.css";
-
-@config "../../craftable-pro.tailwind.config.js";
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-```
-
 ### Add input files
 
-Add these input files into your `vite.config.js` file:
+Add the Craftable PRO input files into your `vite.config.js` file:
 
-```js filename="vite.config.js" copy {10-11}
+```js filename="vite.config.js" copy {9-10}
 import { defineConfig } from "vite";
 import laravel from "laravel-vite-plugin";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   plugins: [
@@ -58,6 +127,7 @@ export default defineConfig({
       ],
       refresh: true,
     }),
+    tailwindcss(),
   ],
 });
 ```
@@ -66,10 +136,11 @@ export default defineConfig({
 
 You may not need to add this plugin if you already have it in your `vite.config.js` file.
 
-```js filename="vite.config.js" copy {3,16-23}
+```js filename="vite.config.js" copy {3,17-24}
 import { defineConfig } from "vite";
 import laravel from "laravel-vite-plugin";
 import vue from "@vitejs/plugin-vue";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   plugins: [
@@ -82,6 +153,7 @@ export default defineConfig({
       ],
       refresh: true,
     }),
+    tailwindcss(),
     vue({
       template: {
         transformAssetUrls: {
@@ -96,13 +168,12 @@ export default defineConfig({
 
 ### Add aliases
 
-Bear in mind that these aliases will be afterwards available in your `resources/js/app.js` as well.
-
-```js filename="vite.config.js" copy {4,26-35}
+```js filename="vite.config.js" copy {4,27-36}
 import { defineConfig } from "vite";
 import laravel from "laravel-vite-plugin";
 import vue from "@vitejs/plugin-vue";
 import { resolve } from "path";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   plugins: [
@@ -115,6 +186,7 @@ export default defineConfig({
       ],
       refresh: true,
     }),
+    tailwindcss(),
     vue({
       template: {
         transformAssetUrls: {
@@ -126,80 +198,22 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@": resolve(__dirname, "./resources/js"),
+      "@": resolve(import.meta.dirname, "./resources/js"),
       "craftable-pro": resolve(
-        __dirname,
+        import.meta.dirname,
         "./vendor/brackets/craftable-pro/resources/js"
       ),
-      ziggy: resolve(__dirname, "./vendor/tightenco/ziggy"),
+      ziggy: resolve(import.meta.dirname, "./vendor/tightenco/ziggy"),
     },
   },
 });
 ```
 
-### Add PostCSS configuration
-
-Create following file in the root of your project if it doesn't exist yet: `postcss.config.js` and add following content. This is required for Tailwind to work properly.
-
-```js filename="postcss.config.js"
-module.exports = {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
-};
-```
-
-#### Alternatively use inline PostCSS configuration
-
-```js filename="vite.config.js" copy {5,27-35}
-import { defineConfig } from "vite";
-import laravel from "laravel-vite-plugin";
-import vue from "@vitejs/plugin-vue";
-import { resolve } from "path";
-import tailwindcss from "tailwindcss";
-
-export default defineConfig({
-  plugins: [
-    laravel({
-      input: [
-        "resources/css/app.css",
-        "resources/js/app.js",
-        "resources/js/craftable-pro/index.ts",
-        "resources/css/craftable-pro.css",
-      ],
-      refresh: true,
-    }),
-    vue({
-      template: {
-        transformAssetUrls: {
-          base: null,
-          includeAbsolute: false,
-        },
-      },
-    }),
-  ],
-  css: {
-    postcss: {
-      plugins: [
-        tailwindcss({
-          config: "./craftable-pro.tailwind.config.js",
-        }),
-      ],
-    },
-  },
-  resolve: {
-    alias: {
-      "@": resolve(__dirname, "./resources/js"),
-      "craftable-pro": resolve(
-        __dirname,
-        "./vendor/brackets/craftable-pro/resources/js"
-      ),
-      ziggy: resolve(__dirname, "./vendor/tightenco/ziggy"),
-    },
-  },
-});
-```
+<Callout type="warning">
+  Your project still on Tailwind CSS 3 with a `postcss.config.js`? Then don't combine the
+  configs. Keep the separate `craftable-pro.vite.config.js`, which ignores your PostCSS
+  config, or upgrade your project to Tailwind CSS 4 first.
+</Callout>
 
 ### Edit `package.json`
 
@@ -224,6 +238,6 @@ Just delete the `craftable-pro.vite.config.js` file from your project once you c
 
 ### Run Vite
 
-Run Vite with `npm run dev` to verify if everything works as expected. From now on, Vite will build not only your frontend files, but also the Craftable PRO ones with only single command
+Run Vite with `npm run dev` to verify if everything works as expected. From now on, Vite builds both your frontend files and the Craftable PRO ones with a single command.
 
 </div>

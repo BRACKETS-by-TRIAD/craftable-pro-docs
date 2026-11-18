@@ -1,6 +1,8 @@
+import { Callout } from 'nextra-theme-docs';
+
 # Customization
 
-Installing Craftable PRO will copy some of the components to your project. This way you can customize them to your needs. Bellow is the file structure for better orientation:
+Installing Craftable PRO will copy some of the components to your project. This way you can customize them to your needs. Below is the file structure for better orientation:
 
 ```
 resource/js/craftable-pro
@@ -12,6 +14,32 @@ resource/js/craftable-pro
 ├── index.ts
 └── shims-vue.d.ts
 ```
+
+## Theme
+
+The admin is styled with Tailwind CSS 4. Its theme (colours, font, breakpoints) lives in the package's CSS, so theme changes arrive with `composer update`. To change it, add a `@theme` block to the end of your entry stylesheet. Anything you define there overrides the package's value:
+
+```css filename="resources/css/craftable-pro.css"
+@import "tailwindcss" source(none);
+@import "craftable-pro/../css/craftable-pro.css";
+
+/* ... plugins and @source lines ... */
+
+@theme {
+    --color-primary-500: #0ea5e9;
+    --color-primary-600: #0284c7;
+}
+```
+
+The theme defines these colour palettes, each with shades from `50` to `950`: `primary`, `secondary`, `gray`, `warning`, `danger`, `success` and `info`. You can also override `--font-sans` (Nunito by default).
+
+Dark mode is class-based: the admin adds the `dark` class to the root element, and the `dark:` variant applies inside it. Use `dark:` classes in your own components as usual.
+
+<Callout>
+  In v3 the theme was configured in `craftable-pro.tailwind.config.js`. That file is gone in v4.
+  If you upgraded from v3, move your changes into a `@theme` block as shown above (see the
+  [upgrade guide](/v4/getting-started/upgrade-guide)).
+</Callout>
 
 ## Logo
 

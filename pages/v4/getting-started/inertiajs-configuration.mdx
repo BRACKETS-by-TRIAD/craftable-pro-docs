@@ -30,8 +30,6 @@ return [
 
 ## Using InertiaJS outside Craftable PRO
 
-### Laravel 11+
-
 If you would like to use an InertiaJS in the frontend part of your application we recommend you to separate the Craftable PRO routes with it's own InertiaJS middleware.
 
 <div className="steps-container">
@@ -81,90 +79,6 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         ...
-```
-
-</div>
-
-### Older Laravel versions
-
-If you would like to use an InertiaJS in the frontend part of your application we recommend you to separate the Craftable PRO routes with it's own InertiaJS middleware.
-
-<div className="steps-container">
-
-### Extract routes
-
-Move all `craftable-pro` routes from `routes/web.php` into a separate file `routes/craftable-pro.php`
-
-```php filename="routes/craftable-pro.php" copy
-<?php
-
-use Illuminate\Support\Facades\Route;
-
-Route::craftablePro('admin');
-```
-
-### Update `app/Http/Kernel.php`
-
-Create a new route middleware group, with the same middlewares as you have in the web group:
-
-```php filename="Kernel.php" {15-22}
-class Kernel extends HttpKernel
-{
-    ...
-
-    protected $middlewareGroups = [
-        'web' => [
-            \App\Http\Middleware\EncryptCookies::class,
-            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            \Illuminate\Session\Middleware\StartSession::class,
-            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \App\Http\Middleware\VerifyCsrfToken::class,
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        ],
-
-        'craftable-pro' => [
-            \App\Http\Middleware\EncryptCookies::class,
-            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            \Illuminate\Session\Middleware\StartSession::class,
-            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \App\Http\Middleware\VerifyCsrfToken::class,
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        ],
-
-        'api' => [
-            'throttle:api',
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        ],
-    ];
-}
-```
-
-### Update RouteServiceProvider.php
-
-Register this new middleware group in your RouteServiceProvider. Place it before the `web` group to prevent any wildcard routes from matching before the Craftable PRO routes.
-
-```php filename="RouteServiceProvider.php" {14-15}
-class RouteServiceProvider extends ServiceProvider
-{
-    ...
-
-    public function boot()
-    {
-        $this->configureRateLimiting();
-
-        $this->routes(function () {
-            Route::middleware('api')
-                ->prefix('api')
-                ->group(base_path('routes/api.php'));
-
-            Route::middleware('craftable-pro')
-                ->group(base_path('routes/craftable-pro.php'));
-
-            Route::middleware('web')
-                ->group(base_path('routes/web.php'));
-        });
-    }
-}
 ```
 
 </div>

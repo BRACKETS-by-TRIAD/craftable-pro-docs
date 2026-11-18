@@ -1,3 +1,5 @@
+import { Callout } from 'nextra-theme-docs';
+
 # Directory structure
 
 After installation you will see the following directory structure:
@@ -23,9 +25,14 @@ After installation you will see the following directory structure:
 │           │   └── UserDropdown.vue
 │           ├── Pages/
 │           └── index.ts
-├── craftable-pro.vite.config.js
-└── craftable-pro.tailwind.config.js
-````
+└── craftable-pro.vite.config.js
+```
+
+<Callout>
+  Since v4 there is no `craftable-pro.tailwind.config.js`. The admin is built with Tailwind CSS 4,
+  which is configured in CSS. The theme ships with the package, and you can customize it in
+  `resources/css/craftable-pro.css` (see [Customization](/v4/frontend/customization#theme)).
+</Callout>
 
 ## Controllers directory
 
@@ -45,6 +52,12 @@ This directory is used by generator to generate CRUD requests for your models. S
 
 This directory contains YAML configuration files used for CRUD generation. You can learn more at [Config Generator docs](/v4/basic-features/config-generator).
 
+
+## Resources CSS directory
+
+`resources/css/craftable-pro.css`
+
+The entry stylesheet of the admin. It imports Tailwind and the admin's theme from the package, tells Tailwind where to look for class names, and is the place for your own theme changes.
 
 ## Resources JS directory
 

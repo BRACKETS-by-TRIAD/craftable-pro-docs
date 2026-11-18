@@ -4,6 +4,30 @@ All notable changes to Craftable PRO will be documented on this page.
 
 <div className="changelog-container">
 
+## v4.0.0 - Unreleased
+
+### What's Changed
+
+- feat: Laravel 13 support
+- feat: drop Laravel 11 support, require PHP 8.3+
+- feat: `spatie/laravel-query-builder` v7 (variadic `allowedFilters()`/`allowedSorts()`, generator updated)
+- feat: `spatie/laravel-permission` v8
+- feat: `maatwebsite/excel` ^4.0 and `socialiteproviders/apple` ^6.0 support (PHP 8.5)
+- feat: admin built with Tailwind CSS 4, theme shipped in the package CSS, no more `craftable-pro.tailwind.config.js`
+- feat: Vite 8, `laravel-vite-plugin` 3, `@vitejs/plugin-vue` 6
+- feat: Tiptap 3 in the WYSIWYG editor
+- feat: `laravel-vue-i18n` v2
+- feat: installer warns about outdated published frontend files
+- fix(security): all known npm vulnerabilities fixed (`npm audit` reports 0)
+- fix(security): signed, time-limited invitation links
+- fix(security): prevent path traversal and cross-model access in media processing
+- fix: generated decimal cast now includes its scale
+- fix: social login error messages are translated
+- fix: `DropdownItem` passes the click event to its listeners
+- refactor: `L11DatabaseManager` renamed to `SchemaDatabaseManager`, `DbalDatabaseManager` removed
+
+### [Upgrade Guide](/v4/getting-started/upgrade-guide)
+
 ## v3.0.5 - 2026-10-31
 
 ### What's Changed
@@ -81,7 +105,7 @@ All notable changes to Craftable PRO will be documented on this page.
 - fix: fixing tests
 - fix: multiple minor fixes
 
-### [Upgrade Guide](/v4/getting-started/upgrade-guide)
+### [Upgrade Guide](/v3/getting-started/upgrade-guide)
 
 ## v2.0.5 - 2024-10-30
 
@@ -292,7 +316,7 @@ All notable changes to Craftable PRO will be documented on this page.
 
 - Run `composer update` to update dependencies
 - If you have `"type": "module"` in your package.json (this apply for Laravel projects newer than `v10.2.0`), please follow the steps bellow to upgrade. Otherwise, you can skip these steps.
-  - Make sure you don't have any `require` in your `craftable-pro.vite.config.js`, if so, please take a look on the Vite config [here](/getting-started/vite-configuration#alternatively-use-inline-postcss-configuration), and change yours accordingly
+  - Make sure you don't have any `require` in your `craftable-pro.vite.config.js`, if so, please take a look on the Vite config [here](/old/getting-started/vite-configuration#alternatively-use-inline-postcss-configuration), and change yours accordingly
   - Make sure you have `@formkit/auto-animate` in your package.json with the version `0.7.0` or higher
 
 ## v1.1.13 - 2023-05-25

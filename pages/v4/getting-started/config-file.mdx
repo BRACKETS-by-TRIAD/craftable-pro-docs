@@ -41,6 +41,10 @@ If set to true, then user last activity timestamp will be tracked with every req
 
 Class which will be used for handling Inertia requests
 
+### invitation.expiration_minutes
+
+How long (in minutes) an invitation link stays valid after it was sent. Invitation links are signed, time-limited URLs. Default is 7 days (`60 * 24 * 7`).
+
 ### self_registration.enabled
 
 If set to true, users will be able to register by themselves.

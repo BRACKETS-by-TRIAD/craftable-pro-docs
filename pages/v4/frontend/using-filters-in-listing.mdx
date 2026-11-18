@@ -12,33 +12,33 @@ In this documentation I will use the `Article` model as an example and I will im
 
 ### Edit your controller
 
-First we need to edit generated controller for our model and add columns we want to filter by into the query builder using the `allowedFilters` method. You can learn more about the query builder in the [Spatie's Query Builder documentation](https://spatie.be/index.php/docs/laravel-query-builder/v5/features/filtering).
+First we need to edit generated controller for our model and add columns we want to filter by into the query builder using the `allowedFilters` method. You can learn more about the query builder in the [Spatie's Query Builder documentation](https://spatie.be/index.php/docs/laravel-query-builder/v7/features/filtering).
 I will also include all authors in the Inertia response so we can use them in the Multiselect component later. All together it will look like this:
 
 ```php filename="app/Http/Controllers/CraftablePro/Article/ArticleController.php" {10-11, 27}
 public function index(IndexArticlesRequest $request)
 {
     $articlesQuery = QueryBuilder::for(Article::class)
-        ->allowedFilters([
+        ->allowedFilters(
             AllowedFilter::custom('search', new FuzzyFilter(
                 'id',
                 'title',
                 'published_at'
             )),
             AllowedFilter::exact('author_id'),
-            AllowedFilter::callback('published_at', fn (Builder $query, $value) => $query->whereDate('published_at', $value)),
-        ])
+            AllowedFilter::callback('published_at', fn (Builder $query, mixed $value) => $query->whereDate('published_at', $value)),
+        )
         ->defaultSort('id')
-        ->allowedSorts(['id', 'title', 'published_at'])
+        ->allowedSorts('id', 'title', 'published_at')
         ->with('author');
 
-    if ($request->wantsJson() && $request->get('bulk_select_all')) {
+    if ($request->wantsJson() && $request->input('bulk_select_all')) {
         return response()->json($articlesQuery->select(['id'])->pluck('id'));
     }
 
     $articles = $articlesQuery
         ->select(['id', 'title', 'published_at', 'author_id'])
-        ->paginate($request->get('per_page'))->withQueryString();
+        ->paginate($request->input('per_page'))->withQueryString();
 
     return Inertia::render('Article/Index', [
         'articles' => $articles,
@@ -53,7 +53,14 @@ public function index(IndexArticlesRequest $request)
   `author_id` column and we want to use custom callback for the `published_at`
   column so we can filter by date, without taking time into the account. You can
   learn more about all the options in the [Spatie's Query Builder
-  documentation](https://spatie.be/index.php/docs/laravel-query-builder/v5/features/filtering).
+  documentation](https://spatie.be/index.php/docs/laravel-query-builder/v7/features/filtering).
+</Callout>
+
+<Callout type="warning">
+  Craftable PRO v4 uses `spatie/laravel-query-builder` v7. Its `allowedFilters()`, `allowedSorts()`,
+  `allowedIncludes()`, `allowedFields()` and `defaultSorts()` methods take **variadic arguments**,
+  not an array. Passing an array throws a `TypeError`. If you build the list at runtime, unpack
+  it: `->allowedSorts(...$columns)`.
 </Callout>
 
 ### Import useListingFilters hook
