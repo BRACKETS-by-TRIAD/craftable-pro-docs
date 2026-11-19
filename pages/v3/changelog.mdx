@@ -4,6 +4,41 @@ All notable changes to Craftable PRO will be documented on this page.
 
 <div className="changelog-container">
 
+## v3.0.5 - 2026-10-31
+
+### What's Changed
+
+- fix(security): require signed, time-limited links to accept invitations
+- fix(security): prevent path traversal and cross-model access in media processing
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+- If you published `Pages/Auth/InviteUser.vue`, post the form to the new `action` prop instead of `route("craftable-pro.invite-user.store")`
+- If you overrode the `invite_user` e-mail template, use the `$url` variable for the button link
+- Resend invitations sent before the update, since their links stop working
+
+## v3.0.4 - 2025-09-08
+
+### What's Changed
+
+- fix: preserve search input focus with enhanced partial updates
+- fix: table name pluralization in CRUD generation
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
+## v3.0.3 - 2025-05-21
+
+### What's Changed
+
+- fix: pagination
+
+### Upgrade Guide
+
+- Run `composer update` to update dependencies
+
 ## v3.0.2 - 2025-04-02
 
 ### What's Changed

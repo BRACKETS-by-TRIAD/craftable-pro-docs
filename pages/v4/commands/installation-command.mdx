@@ -1,0 +1,20 @@
+# Installation command
+
+```bash copy
+php artisan craftable-pro:install
+```
+<div>
+    This command install Craftable PRO package. Publish resources, migrations, config, creating admin user,
+    edit some configuration files, generating translations.
+</div>
+
+#### Command options:
+<p>`--overwrite` - Replace all files</p>
+<p>`--no-user` - Skip generating admin user</p>
+<p>`--no-migrate` - Skip generating migrations </p>
+<p>`--no-interaction` - Don't ask anyone questions</p>
+<p>`--without-logger` - Skip install advanced logger package</p>
+
+#### Outdated frontend files
+
+Without `--overwrite`, the installer keeps files you already have. If your `craftable-pro.vite.config.js` or `resources/css/craftable-pro.css` was published by an older version (Vite 5 or Tailwind CSS 3), the installer warns you, because those files don't build with Vite 8 and Tailwind CSS 4. Re-run it with `--overwrite`, or update the files by hand as described in the [upgrade guide](/v4/getting-started/upgrade-guide#migrate-to-tailwind-css-4).

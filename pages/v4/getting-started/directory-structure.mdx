@@ -1,0 +1,75 @@
+import { Callout } from 'nextra-theme-docs';
+
+# Directory structure
+
+After installation you will see the following directory structure:
+
+```bash
+├── app/
+│   └── Http/
+│       ├── Controllers/
+│       │   └── CraftablePro/
+│       └── Requests/
+│           └── CraftablePro/
+├── resources/
+│   ├── craftable-pro/
+│   │   ├── orders.yml
+│   │   └── posts.yml
+│   ├── css/
+│   │   └── craftable-pro.css
+│   └── js/
+│       └── craftable-pro/
+│           ├── Components/
+│           │   ├── Logo.vue
+│           │   ├── Sidebar.vue
+│           │   └── UserDropdown.vue
+│           ├── Pages/
+│           └── index.ts
+└── craftable-pro.vite.config.js
+```
+
+<Callout>
+  Since v4 there is no `craftable-pro.tailwind.config.js`. The admin is built with Tailwind CSS 4,
+  which is configured in CSS. The theme ships with the package, and you can customize it in
+  `resources/css/craftable-pro.css` (see [Customization](/v4/frontend/customization#theme)).
+</Callout>
+
+## Controllers directory
+
+`app/Http/Controllers/CraftablePro/`
+
+This directory is used by generator to generate CRUD controllers for your models. You can also add your own controllers here. If you like, you can further namespace your controllers to group similar concerns together.
+
+## Requests directory
+
+`app/Http/Requests/CraftablePro/`
+
+This directory is used by generator to generate CRUD requests for your models. Similarly, you can also add your own requests here.
+
+## Resources craftable-pro directory
+
+`resources/craftable-pro/`
+
+This directory contains YAML configuration files used for CRUD generation. You can learn more at [Config Generator docs](/v4/basic-features/config-generator).
+
+
+## Resources CSS directory
+
+`resources/css/craftable-pro.css`
+
+The entry stylesheet of the admin. It imports Tailwind and the admin's theme from the package, tells Tailwind where to look for class names, and is the place for your own theme changes.
+
+## Resources JS directory
+
+`resources/js/craftable-pro/`
+
+This directory contains all frontend resources related to Craftable PRO. Its structure is inspired by InertiaJS. You can learn more about it in [InertiaJS's documentation](https://inertiajs.com/).
+
+### resources/js/craftable-pro/Components
+
+This directory contains Vue components that are used in Craftable PRO. You can modify them to fit your needs or create some custom ones.
+
+### resources/js/craftable-pro/Pages
+
+This directory contains Vue components that are used as pages in Craftable PRO. You can modify existing ones to fit your needs or create some custom ones. This is also directory where generator puts your generated pages.
+For more information about Pages in InertiaJS, please check [InertiaJS's documentation](https://inertiajs.com/pages).

@@ -1,0 +1,39 @@
+# Github Actions
+
+In order to use Craftable PRO in Github Actions we must authorize composer to access private repository
+
+To authorize composer in Github Actions we will add new Secret and extend our `action.yml` with `COMPOSER_AUTH` enviroment variable.
+
+## Add a new key in Respository Settings
+
+In Github under Respository Settings navigate to `Secrets` and add new variables
+
+```sh
+key:    CRAFTABLE_PRO_EMAIL
+value:  <your-email-address-you-purchased-licence-with>
+```
+
+```sh
+key:    CRAFTABLE_PRO_LICENCE_KEY
+value:  <your-licence-key>
+```
+
+## Add `COMPOSER_AUTH` in your Action `action.yml`
+
+Under `env` of your `.yml` composer build step, add following line
+
+```sh
+COMPOSER_AUTH: '{"http-basic":{"packages.craftable.pro":{"username":"'$CRAFTABLE_PRO_EMAIL'","password":"'$CRAFTABLE_PRO_LICENCE_KEY'"}}}' composer install --no-interaction --prefer-dist
+```
+
+Example of a build step
+
+```sh {7}
+jobs:
+  build:
+    ...
+    - name: Install dependencies
+      uses: php-actions/composer@v6
+      env:
+        COMPOSER_AUTH: {"http-basic":{"packages.craftable.pro":{"username":"'$CRAFTABLE_PRO_EMAIL'","password":"'$CRAFTABLE_PRO_LICENCE_KEY'"}}}'
+```

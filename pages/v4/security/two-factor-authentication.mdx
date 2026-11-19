@@ -1,0 +1,139 @@
+import Image from "components/image";
+import {Callout} from "nextra-theme-docs";
+
+# Two-Factor Authentication
+
+Craftable Pro uses the [Laravel Fortify](https://laravel.com/docs/fortify) package to implement the backend part of the two-factor authentication.
+
+## Config
+
+CraftablePro overrides the default Fortify config with necessary value changes. However, if you have the `fortify.php` config
+already published or plan to publish it into your project, you will have to make a few changes to make it work with CraftablePro's
+two-factor authentication feature.
+
+```
+'guard' => 'craftable-pro',
+'views' => false,
+'features' => [
+        //Features::registration(),
+        //Features::resetPasswords(),
+        //Features::emailVerification(),
+        //Features::updateProfileInformation(),
+        //Features::updatePasswords(),
+        Features::twoFactorAuthentication([
+            'confirm' => true,
+            'confirmPassword' => true,
+            // 'window' => 0,
+        ]),
+    ],
+```
+Same as they are in `vendor/brackets/craftable-pro/config/fortify.php`
+
+Not all the features have to be disabled, but the Fortify registration, verification and password handling have not yet
+been tested within CraftablePro, as it comes with its own implementations.
+
+If the `'views'` would be set to `true`, Fortify would register its own routes for 2FA and there would be route naming conflicts when caching routes.
+
+## Enable Two-Factor Authentication
+
+Each CraftableProUser can only manage their own 2FA setup. Two-factor authentication is only available for classical email/password login, not for social logins, as of yet.
+
+<div className="steps-container">
+    ### Open tab Security on User Profile settings page
+    On this page, you can change your password or manage the two-factor authentication app.
+    <div style={{height: '25px'}}></div>
+    <Image alt="User Profile Security screen" src="/images/2fa/profile-security.png"></Image>
+
+    ### Click on Set up authentication app
+    Continue with the instructions given by the setup modal.
+
+    Google Authenticator app is available for iOS on [App Store](https://apps.apple.com/us/app/google-authenticator/id388497605) and for
+    Android on [Play Store](https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en_US).
+    <Callout>
+        The Copy Key/Copy Codes (to clipboard) functionality only works over HTTPS, as it uses the [Async Clipboard API](https://www.w3.org/TR/clipboard-apis/#async-clipboard-api).
+    </Callout>
+    <div style={{height: '25px'}}></div>
+    <Image alt="User Profile 2FA setup modal" src="/images/2fa/profile-2fa-setup.png"></Image>
+    ### Confirm the setup
+    <div style={{height: '25px'}}></div>
+    <Image alt="User Profile 2FA setup confirmation modal" src="/images/2fa/profile-2fa-setup-confirm.png"></Image>
+    ### Save the recovery codes
+    <div style={{height: '25px'}}></div>
+    <Image alt="User Profile 2FA recovery codes modal" src="/images/2fa/profile-2fa-recovery-codes.png"></Image>
+    ### Finish
+    Check that the status is now displayed as Enabled.
+    <div style={{height: '25px'}}></div>
+    <Image alt="User Profile 2FA enabled" src="/images/2fa/profile-2fa-enabled.png"></Image>
+</div>
+
+## Login with Two-Factor Authentication
+
+If your two-factor authentication is enabled, you will be prompted for an authentication code after logging in via email/password.
+<div className="steps-container">
+    ### Log in
+    <div style={{height: '25px'}}></div>
+    <Image alt="User Login screen" src="/images/2fa/login.png"></Image>
+
+    ### Get a code from the authenticator app
+    <div style={{height: '25px'}}></div>
+    <Image alt="User login 2FA" src="/images/2fa/login-2fa.png"></Image>
+
+    ### OR use recovery code
+    <div style={{height: '25px'}}></div>
+    <Image alt="User login 2FA recovery" src="/images/2fa/login-2fa-recovery.png"></Image>
+</div>
+
+## Manage Two-Factor Authentication
+
+After setting up the two-factor authentication, you can edit it or remove it.
+
+<div className="steps-container">
+    ### Open tab Security on User Profile settings page
+    On this page, you can change your password or manage the two-factor authentication app.
+    <div style={{height: '25px'}}></div>
+    <Image alt="User Profile Security screen" src="/images/2fa/profile-security-enabled.png"></Image>
+
+    ### Click on Manage app
+    Continue with the instructions given by the manage modal.
+    <div style={{height: '25px'}}></div>
+    <Image alt="User Profile 2FA setup modal" src="/images/2fa/profile-2fa-manage.png"></Image>
+
+    ### To edit the app, click on Change app
+    A new QR code and recovery codes will be generated.
+    <Callout>
+        If you don't confirm the new QR code in the next step, the old QR code will remain active.
+    </Callout>
+    <div style={{height: '25px'}}></div>
+    <Image alt="User Profile 2FA setup modal" src="/images/2fa/profile-2fa-change.png"></Image>
+    ### Confirm the change
+    <div style={{height: '25px'}}></div>
+    <Image alt="User Profile 2FA setup confirmation modal" src="/images/2fa/profile-2fa-change-confirm.png"></Image>
+    ### Save the recovery codes
+    <div style={{height: '25px'}}></div>
+    <Image alt="User Profile 2FA recovery codes modal" src="/images/2fa/profile-2fa-recovery-codes.png"></Image>
+    ### Finish
+    Check that the status is still displayed as Enabled and that the timestamp is current.
+    <div style={{height: '25px'}}></div>
+    <Image alt="User Profile 2FA enabled" src="/images/2fa/profile-2fa-enabled.png"></Image>
+
+    ### To remove the app, click on the trash can icon
+    <div style={{height: '25px'}}></div>
+    <Image alt="User Profile 2FA manage modal" src="/images/2fa/profile-2fa-manage.png"></Image>
+    ### Confirm the removal
+    <div style={{height: '25px'}}></div>
+    <Image alt="User Profile 2FA remove modal" src="/images/2fa/profile-2fa-remove.png"></Image>
+    ### Finish
+    Check that the status is displayed as Disabled.
+    <div style={{height: '25px'}}></div>
+    <Image alt="User Profile 2FA enabled" src="/images/2fa/profile-security.png"></Image>
+</div>
+
+## Require Two-Factor Authentication
+You can require all users of a given role to enable the two-factor authentication in the Roles listing within the Create or Update modal.
+
+Users with disabled two-factor authentication with given role will be prompted once every 24 hours by a modal:
+<Image alt="User 2FA CTA modal" src="/images/2fa/2fa-enable-cta.png"></Image>
+
+## Users with Two-Factor Authentication
+You can check and filter users by their two-factor authentication status in the Access tab in the user listing.
+<Image alt="Users listing 2FA" src="/images/2fa/users-2fa.png"></Image>
