@@ -4,16 +4,11 @@ const withNextra = require("nextra")({
 });
 
 module.exports = withNextra({
+  output: "export",
+  // Emit each route as <route>/index.html so plain static hosts (nginx) serve
+  // directories cleanly instead of shadowing <route>.html with a <route>/ dir.
+  trailingSlash: true,
   images: {
     unoptimized: true,
-  },
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/v4',
-        permanent: false, // Redirect the root to the latest version
-      },
-    ];
   },
 });

@@ -1,4 +1,7 @@
 {
+  "index": {
+    "display": "hidden"
+  },
   "old": {
     "type": "page",
     "title": "v1/v2",
