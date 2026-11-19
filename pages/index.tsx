@@ -5,12 +5,12 @@ import { useEffect } from "react";
 // Done client-side because next.config redirects() are not supported by `output: export`.
 export default function Index() {
   useEffect(() => {
-    window.location.replace("/v3/");
+    window.location.replace("/v4/");
   }, []);
 
   return (
     <Head>
-      <meta httpEquiv="refresh" content="0; url=/v3/" />
+      <meta httpEquiv="refresh" content="0; url=/v4/" />
     </Head>
   );
 }
