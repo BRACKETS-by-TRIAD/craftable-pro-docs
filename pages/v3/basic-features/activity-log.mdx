@@ -1,0 +1,168 @@
+import { Callout } from "nextra-theme-docs";
+
+# Activity Log
+
+The Activity Log module gives your admin panel a built-in **audit trail**. Once a model is opted in, Craftable PRO records every `create`, `update` and `delete` as a log entry that captures:
+
+- **What changed** — a field-level `before → after` diff of the changed attributes only.
+- **Who did it** — the acting Craftable PRO user (the causer).
+- **Where from** — the request IP address and user-agent.
+- **When** — the timestamp of the change.
+
+Entries are surfaced in a read-only, permission-gated **Activity log** page in the admin panel. Under the hood the module wraps [spatie/laravel-activitylog](https://spatie.be/docs/laravel-activitylog) behind the `LogsCraftableProActivity` trait, so your models never bind to the vendor API directly.
+
+<Callout type="info">
+  This is **Phase 1** of the module and covers model-change logging (create /
+  update / delete). Auth-event logging (login, logout, failed attempts, 2FA,
+  password changes) and per-record history with restore are planned follow-ups.
+</Callout>
+
+## Enabling logging on a model
+
+Logging is **opt-in per model**. A model is only tracked once it uses the `LogsCraftableProActivity` trait:
+
+```php {2,6} filename="app/Models/Post.php"
+use Illuminate\Database\Eloquent\Model;
+use Brackets\CraftablePro\Models\Traits\LogsCraftableProActivity;
+
+class Post extends Model
+{
+    use LogsCraftableProActivity;
+
+    protected $fillable = ['title', 'body', 'published_at'];
+}
+```
+
+That is all you need. By default every attribute listed in the model's `$fillable` is logged, changed-only, and empty logs (updates that change nothing) are skipped.
+
+### Choosing which attributes are logged
+
+You can tune what a model records with a few optional properties:
+
+```php filename="app/Models/Post.php"
+class Post extends Model
+{
+    use LogsCraftableProActivity;
+
+    // Log only these attributes (defaults to $fillable when omitted).
+    protected array $logAttributes = ['title', 'body', 'published_at'];
+
+    // Never log these attributes, even if they are in $logAttributes / $fillable.
+    protected array $logExceptChanged = ['updated_at'];
+
+    // Extra fields to mask for this model, merged with the global redact list.
+    protected array $activityLogRedact = ['internal_note'];
+}
+```
+
+- `$logAttributes` — the attributes to log. When omitted, the model logs its `$fillable` attributes.
+- `$logExceptChanged` — attributes to exclude from logging.
+- `$activityLogRedact` — per-model fields to mask before persistence. These are merged with the global `activity_log.redact` list from the config.
+
+<Callout type="info">
+  Redaction masks the **value** but keeps the **key**, so the diff still shows
+  that a field changed without ever writing its contents to the log. The masked
+  value is replaced with the configured `redacted_placeholder`.
+</Callout>
+
+## Configuration reference
+
+The module is configured under the `activity_log` key in `config/craftable-pro.php`:
+
+```php filename="config/craftable-pro.php"
+'activity_log' => [
+    // Master switch for the whole module.
+    'enabled' => true,
+
+    // Eloquent model backing the log table.
+    'model' => \Brackets\CraftablePro\Models\Activity\ActivityLog::class,
+
+    // Guard used to resolve the acting user (causer) for each logged entry.
+    'auth_guard' => 'craftable-pro',
+
+    // Reserved for enabling logging on models the host app does not own
+    // (config-driven opt-in), read in a later phase.
+    'models' => [],
+
+    // Persistence strategy. Phase 1 ships synchronous writes; set enabled=true
+    // to route writes through the queue in a later phase.
+    'queue' => [
+        'enabled' => false,
+        'connection' => null,
+    ],
+
+    // Fields masked BEFORE persistence and never written to the properties
+    // payload. Per-model overrides via a $activityLogRedact property on the model.
+    'redact' => [
+        'password',
+        'remember_token',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
+        'api_token',
+        'access_token',
+        'refresh_token',
+    ],
+
+    // Token substituted for redacted values.
+    'redacted_placeholder' => '••••••••',
+
+    // Retention window in days, driving the (later-phase) prune command.
+    'retention_days' => 365,
+
+    // Auth-event logging (login/logout/failed/2FA/password) lands in Phase 2.
+    'log_auth_events' => false,
+],
+```
+
+| Key | Default | Description |
+| --- | --- | --- |
+| `enabled` | `true` | Master switch for the whole module. |
+| `model` | `Brackets\CraftablePro\Models\Activity\ActivityLog::class` | Eloquent model backing the log table. |
+| `auth_guard` | `'craftable-pro'` | Guard used to resolve the acting user (causer). |
+| `models` | `[]` | Config-driven opt-in for models the host app does not own (reserved for a later phase). |
+| `queue.enabled` | `false` | Route log writes through the queue. Phase 1 writes synchronously. |
+| `queue.connection` | `null` | Queue connection used when `queue.enabled` is `true`. |
+| `redact` | password, remember_token, two_factor_secret, two_factor_recovery_codes, api_token, access_token, refresh_token | Global list of fields masked before persistence. |
+| `redacted_placeholder` | `'••••••••'` | Token substituted for redacted values. |
+| `retention_days` | `365` | Retention window in days, driving the later-phase prune command. |
+| `log_auth_events` | `false` | Auth-event logging. Planned for Phase 2. |
+
+<Callout type="warning">
+  `queue`, `retention_days` and `log_auth_events` are shipped with their final
+  config shape but are consumed by later phases. In Phase 1 writes are
+  synchronous, entries are not automatically pruned, and auth events are not
+  recorded.
+</Callout>
+
+The log entries are stored in the `craftable_pro_activity_log` table, created by the module's migration.
+
+## The Activity log page
+
+The Activity log lives in the **System** group of the admin panel sidebar, alongside Access, Roles, Localization and Settings.
+
+Access is gated by the `craftable-pro.activity-log.index` permission, which is granted to the **Administrator** role out of the box. Users without it will not see the sidebar entry, and requests to the page are rejected. You can grant the permission to other roles in the [Roles & Permissions](/v3/basic-features/roles-permissions) manager.
+
+The page is a read-only listing, sorted newest-first, with the following columns:
+
+- **When** — the timestamp of the change.
+- **Who** — the acting user's name (falling back to their email), plus the request IP address.
+- **Action** — a coloured tag: `Created`, `Updated` or `Deleted`.
+- **Subject** — the changed model and its record id.
+- **Changes** — each changed field with its `old → new` values (redacted values appear as the placeholder).
+
+You can narrow the listing with the built-in filters:
+
+- **User** — filter by causer.
+- **Model** — filter by subject (model) type.
+- **Action** — filter by event (created / updated / deleted).
+- **Date range** — filter by a start and end date.
+
+A free-text search across the log name, description, event, subject type and IP address is also available.
+
+## Roadmap
+
+Phase 1 focuses on model-change logging. Planned follow-ups include:
+
+- Auth-event logging (login, logout, failed attempts, 2FA and password changes), gated behind the `log_auth_events` flag.
+- Queued log writes and automatic pruning based on `retention_days`.
+- Per-record history with the ability to restore a previous version.

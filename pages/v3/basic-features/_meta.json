@@ -4,6 +4,7 @@
   "translations": "Translations",
   "roles-permissions": "Roles & Permissions",
   "settings": "Settings",
+  "activity-log": "Activity Log",
   "media": "Media",
   "crud-generator": "CRUD Generator",
   "config-generator": "Config Generator",
